@@ -31,7 +31,7 @@ export interface RegisterCredentials {
 export interface DailyEntry {
   _id: string;
   user: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   vocabCount: number;
   listeningMinutes: number;
   grammarCount: number;
@@ -70,15 +70,15 @@ export interface GoalActuals {
 }
 
 export interface GoalProgress {
-  vocab: number;     // 0–100 %
+  vocab: number;
   grammar: number;
   listening: number;
 }
 
 export interface WeeklyGoal {
   _id: string;
-  weekStartDate: string; // YYYY-MM-DD (always Monday)
-  weekEndDate: string;   // YYYY-MM-DD (always Sunday)
+  weekStartDate: string;
+  weekEndDate: string;
   targets: GoalTargets;
   actuals: GoalActuals;
   progress: GoalProgress;
@@ -87,7 +87,7 @@ export interface WeeklyGoal {
 }
 
 export interface GoalFormData {
-  weekStartDate?: string; // omit to default to current week
+  weekStartDate?: string;
   vocabTarget: number;
   kanjiTarget: number;
   grammarTarget: number;
@@ -97,4 +97,57 @@ export interface GoalFormData {
 export interface GoalsResponse {
   count: number;
   goals: WeeklyGoal[];
+}
+
+// ── Progress Summary ─────────────────────────────────────────
+export interface TodaySummary {
+  logged: boolean;
+  vocabCount: number;
+  listeningMinutes: number;
+  grammarCount: number;
+  notes: string;
+}
+
+export interface WeekSummary {
+  startDate: string;
+  endDate: string;
+  daysLogged: number;
+  vocabTotal: number;
+  listeningTotal: number;
+  grammarTotal: number;
+}
+
+export interface StreakSummary {
+  current: number;
+  longest: number;
+}
+
+export interface GoalSummary {
+  exists: boolean;
+  targets: GoalTargets | null;
+  progress: {
+    vocab: number | null;
+    grammar: number | null;
+    listening: number | null;
+  } | null;
+}
+
+export interface ProgressSummary {
+  today: TodaySummary;
+  week: WeekSummary;
+  streak: StreakSummary;
+  goal: GoalSummary;
+}
+
+// ── Chart Data ───────────────────────────────────────────────
+export interface ChartDay {
+  date: string;
+  vocabCount: number;
+  listeningMinutes: number;
+  grammarCount: number;
+  logged: boolean;
+}
+
+export interface ChartResponse {
+  days: ChartDay[];
 }

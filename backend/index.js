@@ -34,6 +34,7 @@ app.use(cookieParser());
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/entries", require("./routes/entries"));
 app.use("/api/goals", require("./routes/goals"));
+app.use("/api/progress", require("./routes/progress"));
 
 // Health check
 app.get("/", (req, res) => {
