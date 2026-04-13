@@ -2,6 +2,7 @@ export interface Theme {
   id: string;
   name: string;
   emoji: string;
+  label: string; // Japanese name for flavor
   colors: {
     bg: string;
     card: string;
@@ -18,118 +19,131 @@ export interface Theme {
 
 export const themes: Theme[] = [
   {
-    id: "neon-cyber",
-    name: "Neon Cyber",
-    emoji: "🎮",
+    // Deep ink on washi — classic Japanese calligraphy feel
+    id: "sumi",
+    name: "Sumi Ink",
+    label: "墨",
+    emoji: "🖌️",
     colors: {
-      bg: "#0B0F1A",
-      card: "#111827",
-      primary: "#22C55E",
-      secondary: "#3B82F6",
-      accent: "#A855F7",
-      text: "#E5E7EB",
-      textMuted: "#9CA3AF",
-      border: "#1F2937",
-      xpBar: "#22C55E",
+      bg: "#0D0D0D",
+      card: "#161616",
+      primary: "#C0392B",       // torii vermillion
+      secondary: "#E8D5B0",     // washi paper
+      accent: "#8B7355",        // aged ink brown
+      text: "#F0EDE8",          // warm off-white
+      textMuted: "#8A8075",     // faded ink
+      border: "#2A2520",        // dark border
+      xpBar: "#C0392B",
     },
   },
   {
-    id: "purple-grind",
-    name: "Purple Grind",
-    emoji: "⚡",
+    // Cherry blossom — soft pink light mode
+    id: "sakura",
+    name: "Sakura",
+    label: "桜",
+    emoji: "🌸",
     colors: {
-      bg: "#0F172A",
-      card: "#1E293B",
-      primary: "#7C3AED",
-      secondary: "#22C55E",
-      accent: "#F59E0B",
-      text: "#F1F5F9",
-      textMuted: "#94A3B8",
-      border: "#334155",
-      xpBar: "#7C3AED",
-    },
-  },
-  {
-    id: "classic-xp",
-    name: "Classic XP",
-    emoji: "🟢",
-    colors: {
-      bg: "#F8FAFC",
+      bg: "#FDF6F0",
       card: "#FFFFFF",
-      primary: "#22C55E",
-      secondary: "#16A34A",
-      accent: "#FACC15",
-      text: "#1F2937",
-      textMuted: "#6B7280",
-      border: "#E5E7EB",
-      xpBar: "#22C55E",
+      primary: "#C0687A",       // deep sakura pink
+      secondary: "#8B6BA8",     // wisteria purple
+      accent: "#E8A598",        // soft petal
+      text: "#2D1F1F",          // dark ink
+      textMuted: "#7A6570",     // muted rose-gray
+      border: "#EDD8D0",        // blush border
+      xpBar: "#C0687A",
     },
   },
   {
-    id: "blue-tech",
-    name: "Blue Tech",
-    emoji: "🔵",
+    // Matcha tea house — green earthy tones
+    id: "matcha",
+    name: "Matcha",
+    label: "抹茶",
+    emoji: "🍵",
     colors: {
-      bg: "#0A192F",
-      card: "#112240",
-      primary: "#3B82F6",
-      secondary: "#60A5FA",
-      accent: "#22C55E",
-      text: "#E6F1FF",
-      textMuted: "#8892B0",
-      border: "#1D3461",
-      xpBar: "#3B82F6",
+      bg: "#0F1410",
+      card: "#161D17",
+      primary: "#7CB87A",       // matcha green
+      secondary: "#C8A96E",     // gold tea rim
+      accent: "#4A7C59",        // deep forest
+      text: "#E8F0E8",          // pale green-white
+      textMuted: "#7A9A7A",     // faded moss
+      border: "#243024",        // dark forest border
+      xpBar: "#7CB87A",
     },
   },
   {
-    id: "fire-xp",
-    name: "Fire XP",
-    emoji: "🔥",
+    // Indigo dye — traditional Japanese textile
+    id: "ai",
+    name: "Ai Indigo",
+    label: "藍",
+    emoji: "🪬",
     colors: {
-      bg: "#0B0B0B",
-      card: "#1A1A1A",
-      primary: "#EF4444",
-      secondary: "#F97316",
-      accent: "#FACC15",
-      text: "#FAFAFA",
-      textMuted: "#A1A1AA",
-      border: "#27272A",
-      xpBar: "#EF4444",
+      bg: "#080E1A",
+      card: "#0D1628",
+      primary: "#4A90C4",       // indigo blue
+      secondary: "#C4A45A",     // gold accent
+      accent: "#7BB8D4",        // pale indigo
+      text: "#E8EEF8",          // cool white
+      textMuted: "#6A82A8",     // muted indigo
+      border: "#1A2840",        // deep navy border
+      xpBar: "#4A90C4",
     },
   },
   {
-    id: "gradient-xp",
-    name: "Gradient XP",
-    emoji: "🌈",
+    // Autumn maple — warm reds and ambers
+    id: "koyo",
+    name: "Kōyō",
+    label: "紅葉",
+    emoji: "🍂",
     colors: {
-      bg: "#0F172A",
-      card: "#1E293B",
-      primary: "#22C55E",
-      primaryGradient: "linear-gradient(90deg, #22C55E, #3B82F6)",
-      secondary: "#A855F7",
-      accent: "#F472B6",
-      text: "#E2E8F0",
-      textMuted: "#94A3B8",
-      border: "#334155",
-      xpBar: "#22C55E",
+      bg: "#0F0A06",
+      card: "#1A1008",
+      primary: "#D4622A",       // maple orange-red
+      secondary: "#C4952A",     // golden ginkgo
+      accent: "#8B3A1A",        // deep ember
+      text: "#F8EEE0",          // warm cream
+      textMuted: "#9A7A60",     // autumn dust
+      border: "#2A1A0A",        // dark bark
+      xpBar: "#D4622A",
     },
   },
   {
-    id: "ice-xp",
-    name: "Ice XP",
-    emoji: "🧊",
+    // Snow and pine — minimal winter white
+    id: "yuki",
+    name: "Yuki",
+    label: "雪",
+    emoji: "❄️",
     colors: {
-      bg: "#020617",
-      card: "#0F172A",
-      primary: "#06B6D4",
-      secondary: "#3B82F6",
-      accent: "#22C55E",
-      text: "#E0F2FE",
-      textMuted: "#7DD3FC",
-      border: "#1E3A5F",
-      xpBar: "#06B6D4",
+      bg: "#F8FAFB",
+      card: "#FFFFFF",
+      primary: "#2D6A8A",       // winter pine blue
+      secondary: "#4A8B6A",     // pine green
+      accent: "#8AAABB",        // frost
+      text: "#1A2830",          // deep ink
+      textMuted: "#6A8090",     // muted slate
+      border: "#DDE8EE",        // ice border
+      xpBar: "#2D6A8A",
+    },
+  },
+  {
+    // Night festival — lantern glow dark mode
+    id: "matsuri",
+    name: "Matsuri",
+    label: "祭",
+    emoji: "🏮",
+    colors: {
+      bg: "#0A0608",
+      card: "#140C10",
+      primary: "#E8762A",       // lantern orange
+      secondary: "#C4304A",     // festival red
+      accent: "#E8C44A",        // gold shimmer
+      text: "#F8EEE8",          // warm glow
+      textMuted: "#9A7868",     // ember smoke
+      border: "#2A1A18",        // dark lacquer
+      xpBar: "#E8762A",
     },
   },
 ];
 
-export const defaultTheme = themes[0]; // Neon Cyber as default
+export const defaultTheme = themes[0]; // Sumi Ink as default

@@ -23,10 +23,7 @@ const applyTheme = (theme: Theme) => {
     root.style.setProperty("--color-bg", colors.bg);
     root.style.setProperty("--color-card", colors.card);
     root.style.setProperty("--color-primary", colors.primary);
-    root.style.setProperty(
-        "--color-primary-gradient",
-        colors.primaryGradient || colors.primary
-    );
+    root.style.setProperty("--color-primary-gradient", colors.primaryGradient || colors.primary);
     root.style.setProperty("--color-secondary", colors.secondary);
     root.style.setProperty("--color-accent", colors.accent);
     root.style.setProperty("--color-text", colors.text);
@@ -38,7 +35,6 @@ const applyTheme = (theme: Theme) => {
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const [activeTheme, setActiveTheme] = useState<Theme>(defaultTheme);
 
-    // Load saved theme from localStorage on mount
     useEffect(() => {
         const savedThemeId = localStorage.getItem("nihongo-theme");
         if (savedThemeId) {
@@ -49,7 +45,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
                 return;
             }
         }
-        // Apply default theme if nothing saved
         applyTheme(defaultTheme);
     }, []);
 

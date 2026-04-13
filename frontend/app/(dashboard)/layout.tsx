@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import useAuth from "@/hooks/useAuth";
@@ -19,12 +19,18 @@ export default function DashboardLayout({
     const { user, loading } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         if (!loading && !user) {
             router.replace("/login");
         }
     }, [user, loading, router]);
+
+    // Close mobile menu on route change
+    useEffect(() => {
+        setMenuOpen(false);
+    }, [pathname]);
 
     if (loading) {
         return (
@@ -65,52 +71,122 @@ export default function DashboardLayout({
 
                                 {/* Navbar */}
                                 <nav
-                                    className="sticky top-0 z-40 flex items-center justify-between px-6 py-4 border-b"
+                                    className="sticky top-0 z-40 border-b"
                                     style={{
                                         background: "var(--color-card)",
                                         borderColor: "var(--color-border)",
                                     }}
                                 >
-                                    <span
-                                        className="text-lg font-black tracking-widest"
-                                        style={{ color: "var(--color-primary)", fontFamily: "var(--font-orbitron)" }}
-                                    >
-                                        日本語 TRACKER
-                                    </span>
-
-                                    {/* Nav links */}
-                                    <div className="flex items-center gap-1">
-                                        {navLinks.map(({ href, label, exact }) => {
-                                            const isActive = exact
-                                                ? pathname === href
-                                                : pathname.startsWith(href);
-                                            return (
-                                                <Link
-                                                    key={href}
-                                                    href={href}
-                                                    className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all"
-                                                    style={{
-                                                        color: isActive ? "#000" : "var(--color-text-muted)",
-                                                        background: isActive ? "var(--color-primary)" : "transparent",
-                                                        fontFamily: "var(--font-orbitron)",
-                                                    }}
-                                                >
-                                                    {label}
-                                                </Link>
-                                            );
-                                        })}
-                                    </div>
-
-                                    {/* Right side */}
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex items-center justify-between px-6 py-4">
+                                        {/* Logo */}
                                         <span
-                                            className="text-sm font-semibold hidden sm:block"
-                                            style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
+                                            className="text-lg font-black tracking-widest"
+                                            style={{ color: "var(--color-primary)", fontFamily: "var(--font-orbitron)" }}
                                         >
-                                            {user.name}
+                                            日本語 TRACKER
                                         </span>
-                                        <ThemeToggle />
+
+                                        {/* Desktop nav links */}
+                                        <div className="hidden md:flex items-center gap-1">
+                                            {navLinks.map(({ href, label, exact }) => {
+                                                const isActive = exact
+                                                    ? pathname === href
+                                                    : pathname.startsWith(href);
+                                                return (
+                                                    <Link
+                                                        key={href}
+                                                        href={href}
+                                                        className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all"
+                                                        style={{
+                                                            color: isActive ? "#000" : "var(--color-text-muted)",
+                                                            background: isActive ? "var(--color-primary)" : "transparent",
+                                                            fontFamily: "var(--font-orbitron)",
+                                                        }}
+                                                    >
+                                                        {label}
+                                                    </Link>
+                                                );
+                                            })}
+                                        </div>
+
+                                        {/* Right side */}
+                                        <div className="flex items-center gap-3">
+                                            <span
+                                                className="text-sm font-semibold hidden sm:block"
+                                                style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
+                                            >
+                                                {user.name}
+                                            </span>
+                                            <ThemeToggle />
+
+                                            {/* Hamburger — mobile only */}
+                                            <button
+                                                onClick={() => setMenuOpen((prev) => !prev)}
+                                                className="md:hidden flex flex-col justify-center items-center gap-1.5 w-8 h-8"
+                                                aria-label="Toggle menu"
+                                            >
+                                                <span
+                                                    className="block w-5 h-0.5 transition-all duration-300"
+                                                    style={{
+                                                        background: "var(--color-text-muted)",
+                                                        transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none",
+                                                    }}
+                                                />
+                                                <span
+                                                    className="block w-5 h-0.5 transition-all duration-300"
+                                                    style={{
+                                                        background: "var(--color-text-muted)",
+                                                        opacity: menuOpen ? 0 : 1,
+                                                    }}
+                                                />
+                                                <span
+                                                    className="block w-5 h-0.5 transition-all duration-300"
+                                                    style={{
+                                                        background: "var(--color-text-muted)",
+                                                        transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none",
+                                                    }}
+                                                />
+                                            </button>
+                                        </div>
                                     </div>
+
+                                    {/* Mobile menu dropdown */}
+                                    {menuOpen && (
+                                        <div
+                                            className="md:hidden border-t px-4 py-3 flex flex-col gap-1"
+                                            style={{ borderColor: "var(--color-border)" }}
+                                        >
+                                            {navLinks.map(({ href, label, exact }) => {
+                                                const isActive = exact
+                                                    ? pathname === href
+                                                    : pathname.startsWith(href);
+                                                return (
+                                                    <Link
+                                                        key={href}
+                                                        href={href}
+                                                        className="text-xs font-black uppercase tracking-widest px-4 py-3 rounded-xl transition-all"
+                                                        style={{
+                                                            color: isActive ? "#000" : "var(--color-text-muted)",
+                                                            background: isActive ? "var(--color-primary)" : "transparent",
+                                                            fontFamily: "var(--font-orbitron)",
+                                                        }}
+                                                    >
+                                                        {label}
+                                                    </Link>
+                                                );
+                                            })}
+                                            <div
+                                                className="pt-2 mt-1 border-t text-xs font-semibold px-4"
+                                                style={{
+                                                    borderColor: "var(--color-border)",
+                                                    color: "var(--color-text-muted)",
+                                                    fontFamily: "var(--font-rajdhani)",
+                                                }}
+                                            >
+                                                {user.name}
+                                            </div>
+                                        </div>
+                                    )}
                                 </nav>
 
                                 <main className="max-w-4xl mx-auto px-4 py-8 relative z-10">

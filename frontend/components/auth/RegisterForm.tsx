@@ -22,82 +22,75 @@ const RegisterForm = () => {
     await register(formData);
   };
 
+  const fields = [
+    { label: "Full Name", name: "name", type: "text", placeholder: "Yamada Taro" },
+    { label: "Email", name: "email", type: "email", placeholder: "you@example.com" },
+    { label: "Password", name: "password", type: "password", placeholder: "Min. 6 characters" },
+  ];
+
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4"
-      style={{ background: "var(--color-bg)" }}
+      className="min-h-screen flex items-center justify-center"
+      style={{ background: "var(--color-bg)", padding: "1rem" }}
     >
       {/* Ambient glow */}
       <div
-        className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-3xl opacity-[0.07] pointer-events-none"
-        style={{ background: "var(--color-primary)" }}
+        className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none"
+        style={{ background: "var(--color-primary)", opacity: 0.06 }}
       />
 
-      <div className="relative w-full max-w-md z-10">
+      <div className="relative w-full z-10" style={{ maxWidth: "420px" }}>
 
         {/* Brand */}
-        <div className="text-center mb-8">
+        <div className="text-center" style={{ marginBottom: "2.5rem" }}>
           <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 text-3xl font-black"
+            className="inline-flex items-center justify-center rounded-2xl text-2xl font-black"
             style={{
               background: "var(--color-primary)",
               color: "#000",
-              fontFamily: "var(--font-orbitron)",
+              width: "64px",
+              height: "64px",
+              marginBottom: "1.25rem",
             }}
           >
             日
           </div>
           <h1
-            className="text-2xl font-black tracking-wider"
-            style={{
-              color: "var(--color-text)",
-              fontFamily: "var(--font-orbitron)",
-            }}
+            className="font-black tracking-widest uppercase"
+            style={{ color: "var(--color-text)", fontSize: "1.1rem", marginBottom: "0.5rem" }}
           >
-            NIHONGO TRACKER
+            Nihongo Tracker
           </h1>
-          <p
-            className="text-base mt-1 font-medium"
-            style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-          >
+          <p style={{ color: "var(--color-muted)", fontSize: "0.875rem" }}>
             Level up your Japanese every day
           </p>
         </div>
 
         {/* Card */}
         <div
-          className="rounded-2xl p-8"
+          className="rounded-2xl"
           style={{
             background: "var(--color-card)",
             border: "1px solid var(--color-border)",
+            padding: "2.5rem",
           }}
         >
           <h2
-            className="text-xl font-bold tracking-wide mb-1"
-            style={{
-              color: "var(--color-text)",
-              fontFamily: "var(--font-orbitron)",
-            }}
+            className="font-black tracking-wide uppercase"
+            style={{ color: "var(--color-text)", fontSize: "1.125rem", marginBottom: "0.25rem" }}
           >
-            CREATE ACCOUNT
+            Create Account
           </h2>
-          <p
-            className="text-base font-medium mb-6"
-            style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-          >
-            Join and start earning XP today
+          <p style={{ color: "var(--color-muted)", fontSize: "0.875rem", marginBottom: "2rem" }}>
+            Start your journey today
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {[
-              { label: "Full Name", name: "name", type: "text", placeholder: "Yamada Taro" },
-              { label: "Email", name: "email", type: "email", placeholder: "you@example.com" },
-              { label: "Password", name: "password", type: "password", placeholder: "Min. 6 characters" },
-            ].map((field) => (
-              <div key={field.name} className="flex flex-col gap-1.5">
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            {fields.map((field) => (
+              <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 <label
-                  className="text-xs font-bold uppercase tracking-widest"
-                  style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
+                  className="font-black uppercase tracking-widest"
+                  style={{ color: "var(--color-muted)", fontSize: "0.625rem" }}
                 >
                   {field.label}
                 </label>
@@ -109,12 +102,13 @@ const RegisterForm = () => {
                   value={formData[field.name as keyof RegisterCredentials]}
                   onChange={handleChange}
                   placeholder={field.placeholder}
-                  className="w-full px-4 py-3 rounded-xl text-base font-medium outline-none transition-all"
+                  className="w-full rounded-xl outline-none transition-all"
                   style={{
                     background: "var(--color-bg)",
                     border: "1px solid var(--color-border)",
                     color: "var(--color-text)",
-                    fontFamily: "var(--font-rajdhani)",
+                    fontSize: "0.875rem",
+                    padding: "0.875rem 1rem",
                   }}
                   onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
                   onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
@@ -125,22 +119,23 @@ const RegisterForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              className="w-full rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
                 background: "var(--color-primary)",
                 color: "#000",
-                fontFamily: "var(--font-orbitron)",
-                fontSize: "13px",
+                fontSize: "0.75rem",
+                padding: "0.875rem",
+                marginTop: "0.5rem",
               }}
             >
-              {loading ? "LOADING..." : "START JOURNEY →"}
+              {loading ? "Loading..." : "Start Journey →"}
             </button>
           </form>
         </div>
 
         <p
-          className="text-center text-base font-medium mt-5"
-          style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
+          className="text-center font-medium"
+          style={{ color: "var(--color-muted)", fontSize: "0.875rem", marginTop: "1.5rem" }}
         >
           Already have an account?{" "}
           <Link
