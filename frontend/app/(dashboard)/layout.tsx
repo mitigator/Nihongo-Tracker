@@ -47,6 +47,7 @@ export default function DashboardLayout({
         { href: "/dashboard/goals", label: "GOALS", exact: false },
         { href: "/dashboard/tests", label: "TESTS", exact: false },
         { href: "/dashboard/plans", label: "PLANS", exact: false },
+        { href: "/dashboard/analytics", label: "ANALYTICS", exact: false },
     ];
 
     return (
