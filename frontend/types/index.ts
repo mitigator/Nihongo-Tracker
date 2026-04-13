@@ -188,3 +188,41 @@ export interface MockTestsResponse {
   bestScore: number;
   tests: MockTest[];
 }
+
+// ── Study Plan ───────────────────────────────────────────────
+export type PlanLevel = "N5" | "N4" | "N3" | "N2" | "N1" | "custom";
+
+export interface WeekTarget {
+  week: number;
+  vocabTarget: number;
+  kanjiTarget: number;
+  grammarTarget: number;
+  listeningTarget: number;
+  notes: string;
+}
+
+export interface StudyPlan {
+  _id: string;
+  user: string;
+  title: string;
+  level: PlanLevel;
+  startDate: string;
+  endDate: string;
+  currentWeek: number | null;
+  weeklyTargets: WeekTarget[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StudyPlanFormData {
+  title: string;
+  level: PlanLevel;
+  startDate: string;
+  endDate: string;
+  weeklyTargets: WeekTarget[];
+}
+
+export interface PlansResponse {
+  count: number;
+  plans: StudyPlan[];
+}
