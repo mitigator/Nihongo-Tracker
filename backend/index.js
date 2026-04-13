@@ -36,6 +36,7 @@ app.use("/api/entries", require("./routes/entries"));
 app.use("/api/goals", require("./routes/goals"));
 app.use("/api/progress", require("./routes/progress"));
 app.use("/api/tests", require("./routes/tests"));
+app.use("/api/plans", require("./routes/plans"));
 
 // Health check
 app.get("/", (req, res) => {
