@@ -151,3 +151,40 @@ export interface ChartDay {
 export interface ChartResponse {
   days: ChartDay[];
 }
+
+// ── Mock Tests ───────────────────────────────────────────────
+export interface MockTest {
+  _id: string;
+  user: string;
+  date: string;
+  totalScore: number;
+  vocabScore: number;
+  grammarScore: number;
+  readingScore: number;
+  listeningScore: number;
+  passThreshold: number;
+  passed: boolean;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MockTestFormData {
+  date: string;
+  totalScore: number;
+  vocabScore: number;
+  grammarScore: number;
+  readingScore: number;
+  listeningScore: number;
+  passThreshold: number;
+  notes: string;
+}
+
+export interface MockTestsResponse {
+  count: number;
+  passed: number;
+  failed: number;
+  avgScore: number;
+  bestScore: number;
+  tests: MockTest[];
+}
