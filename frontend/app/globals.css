@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg:         #0b0f1a;
+  --color-card:       #111827;
+  --color-primary:    #22c55e;
+  --color-secondary:  #3b82f6;
+  --color-accent:     #a855f7;
+  --color-text:       #e5e7eb;
+  --color-text-muted: #9ca3af;
+  --color-border:     #1f2937;
+  --color-xp-bar:     #22c55e;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-rajdhani), sans-serif;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* Theme utility classes */
+.bg-theme-bg        { background-color: var(--color-bg); }
+.bg-theme-card      { background-color: var(--color-card); }
+.bg-theme-primary   { background-color: var(--color-primary); }
+.bg-theme-secondary { background-color: var(--color-secondary); }
+.bg-theme-accent    { background-color: var(--color-accent); }
+.bg-theme-border    { background-color: var(--color-border); }
+.bg-theme-xp        { background-color: var(--color-xp-bar); }
+
+.text-theme-text    { color: var(--color-text); }
+.text-theme-muted   { color: var(--color-text-muted); }
+.text-theme-primary { color: var(--color-primary); }
+.text-theme-accent  { color: var(--color-accent); }
+
+.border-theme-border  { border-color: var(--color-border); }
+.border-theme-primary { border-color: var(--color-primary); }
+
+.font-orbitron { font-family: var(--font-orbitron), sans-serif; }
+.font-rajdhani { font-family: var(--font-rajdhani), sans-serif; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }

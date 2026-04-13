@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       );
       setUser(data);
       toast.success("Account created successfully");
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       const err = error as AxiosError<ApiError>;
       const message =
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       );
       setUser(data);
       toast.success("Logged in successfully");
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       const err = error as AxiosError<ApiError>;
       const message =

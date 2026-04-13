@@ -7,7 +7,6 @@ import { LoginCredentials } from "@/types";
 
 const LoginForm = () => {
   const { login, loading } = useAuth();
-
   const [formData, setFormData] = useState<LoginCredentials>({
     email: "",
     password: "",
@@ -23,75 +22,151 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-        {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Welcome back
+    <div
+      className="min-h-screen flex items-center justify-center px-4"
+      style={{ background: "var(--color-bg)" }}
+    >
+      {/* Ambient glow */}
+      <div
+        className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-3xl opacity-[0.07] pointer-events-none"
+        style={{ background: "var(--color-primary)" }}
+      />
+
+      <div className="relative w-full max-w-md z-10">
+
+        {/* Brand */}
+        <div className="text-center mb-8">
+          <div
+            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 text-3xl font-black"
+            style={{
+              background: "var(--color-primary)",
+              color: "#000",
+              fontFamily: "var(--font-orbitron)",
+            }}
+          >
+            日
+          </div>
+          <h1
+            className="text-2xl font-black tracking-wider"
+            style={{
+              color: "var(--color-text)",
+              fontFamily: "var(--font-orbitron)",
+            }}
+          >
+            NIHONGO TRACKER
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Sign in to continue your JLPT journey
+          <p
+            className="text-base mt-1 font-medium"
+            style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
+          >
+            Your JLPT grind starts here
           </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Email address
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="you@example.com"
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white text-sm font-medium py-2.5 rounded-lg transition"
+        {/* Card */}
+        <div
+          className="rounded-2xl p-8"
+          style={{
+            background: "var(--color-card)",
+            border: "1px solid var(--color-border)",
+          }}
+        >
+          <h2
+            className="text-xl font-bold tracking-wide mb-1"
+            style={{
+              color: "var(--color-text)",
+              fontFamily: "var(--font-orbitron)",
+            }}
           >
-            {loading ? "Signing in..." : "Sign in"}
-          </button>
-        </form>
+            SIGN IN
+          </h2>
+          <p
+            className="text-base font-medium mb-6"
+            style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
+          >
+            Continue your streak — don&apos;t break it
+          </p>
 
-        {/* Footer link */}
-        <p className="text-center text-sm text-gray-500 mt-6">
-          Don&apos;t have an account?{" "}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex flex-col gap-1.5">
+              <label
+                className="text-xs font-bold uppercase tracking-widest"
+                style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
+              >
+                Email
+              </label>
+              <input
+                name="email"
+                type="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                className="w-full px-4 py-3 rounded-xl text-base font-medium outline-none transition-all"
+                style={{
+                  background: "var(--color-bg)",
+                  border: "1px solid var(--color-border)",
+                  color: "var(--color-text)",
+                  fontFamily: "var(--font-rajdhani)",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
+                onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label
+                className="text-xs font-bold uppercase tracking-widest"
+                style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
+              >
+                Password
+              </label>
+              <input
+                name="password"
+                type="password"
+                required
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full px-4 py-3 rounded-xl text-base font-medium outline-none transition-all"
+                style={{
+                  background: "var(--color-bg)",
+                  border: "1px solid var(--color-border)",
+                  color: "var(--color-text)",
+                  fontFamily: "var(--font-rajdhani)",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
+                onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              style={{
+                background: "var(--color-primary)",
+                color: "#000",
+                fontFamily: "var(--font-orbitron)",
+                fontSize: "13px",
+              }}
+            >
+              {loading ? "LOADING..." : "SIGN IN →"}
+            </button>
+          </form>
+        </div>
+
+        <p
+          className="text-center text-base font-medium mt-5"
+          style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
+        >
+          No account?{" "}
           <Link
             href="/register"
-            className="text-indigo-600 hover:underline font-medium"
+            className="font-bold hover:underline"
+            style={{ color: "var(--color-primary)" }}
           >
-            Create one
+            Create one — it&apos;s free
           </Link>
         </p>
       </div>

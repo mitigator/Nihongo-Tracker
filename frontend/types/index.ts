@@ -26,3 +26,31 @@ export interface RegisterCredentials {
   email: string;
   password: string;
 }
+
+// ── Daily Entry ──────────────────────────────────────────────
+export interface DailyEntry {
+  _id: string;
+  user: string;
+  date: string; // YYYY-MM-DD
+  vocabCount: number;
+  listeningMinutes: number;
+  grammarCount: number;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EntryFormData {
+  date: string;
+  vocabCount: number;
+  listeningMinutes: number;
+  grammarCount: number;
+  notes: string;
+}
+
+export interface EntriesResponse {
+  count: number;
+  currentStreak: number;
+  longestStreak: number;
+  entries: DailyEntry[];
+}
