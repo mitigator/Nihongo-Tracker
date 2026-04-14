@@ -7,36 +7,15 @@ interface StatCardProps {
 
 export default function StatCard({ label, value, unit, icon }: StatCardProps) {
     return (
-        <div
-            className="rounded-2xl px-5 py-4 border flex items-center gap-4"
-            style={{
-                background: "var(--color-card)",
-                borderColor: "var(--color-border)",
-            }}
-        >
-            <span className="text-3xl">{icon}</span>
-            <div>
-                <p
-                    className="text-xs font-bold uppercase tracking-widest"
-                    style={{
-                        color: "var(--color-text-muted)",
-                        fontFamily: "var(--font-orbitron)",
-                    }}
-                >
+        <div className="rounded-2xl border flex items-center gap-4 w-full bg-[var(--color-card)] border-[var(--color-border)]" style={{ padding: "1.25rem 1.5rem" }}>
+            <span className="text-3xl lg:text-4xl leading-none shrink-0">{icon}</span>
+            <div className="min-w-0">
+                <p className="font-black uppercase tracking-widest text-[0.55rem] lg:text-[0.65rem] text-[var(--color-muted)] font-[var(--font-orbitron)] mb-1">
                     {label}
                 </p>
-                <p
-                    className="text-2xl font-black"
-                    style={{
-                        color: "var(--color-text)",
-                        fontFamily: "var(--font-orbitron)",
-                    }}
-                >
+                <p className="font-black text-2xl lg:text-3xl leading-none text-[var(--color-text)] font-[var(--font-orbitron)]">
                     {value}
-                    <span
-                        className="text-sm font-medium ml-1"
-                        style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-                    >
+                    <span className="font-medium text-sm lg:text-base text-[var(--color-muted)] font-[var(--font-rajdhani)] ml-1">
                         {unit}
                     </span>
                 </p>

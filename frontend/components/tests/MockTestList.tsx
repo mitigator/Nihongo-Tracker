@@ -23,13 +23,7 @@ export default function MockTestList({ tests }: MockTestListProps) {
         return (
             <div className="text-center py-16">
                 <p className="text-5xl mb-4">📝</p>
-                <p
-                    className="text-base font-semibold"
-                    style={{
-                        color: "var(--color-text-muted)",
-                        fontFamily: "var(--font-rajdhani)",
-                    }}
-                >
+                <p className="font-semibold text-sm lg:text-base text-[var(--color-muted)] font-[var(--font-rajdhani)]">
                     No tests logged yet. Take a mock test and record your score!
                 </p>
             </div>
@@ -37,81 +31,52 @@ export default function MockTestList({ tests }: MockTestListProps) {
     }
 
     return (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
             {tests.map((test) => (
                 <div
                     key={test._id}
-                    className="rounded-2xl border px-5 py-4 transition-all"
+                    className="rounded-2xl border transition-all bg-[var(--color-card)]"
                     style={{
-                        background: "var(--color-card)",
                         borderColor: test.passed ? "var(--color-primary)" : "var(--color-border)",
+                        padding: "1.25rem 1.5rem",
                     }}
-                    onMouseEnter={(e) =>
-                    (e.currentTarget.style.borderColor = test.passed
-                        ? "var(--color-primary)"
-                        : "#ef4444")
-                    }
-                    onMouseLeave={(e) =>
-                    (e.currentTarget.style.borderColor = test.passed
-                        ? "var(--color-primary)"
-                        : "var(--color-border)")
-                    }
+                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = test.passed ? "var(--color-primary)" : "#ef4444")}
+                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = test.passed ? "var(--color-primary)" : "var(--color-border)")}
                 >
                     <div className="flex items-start justify-between gap-4 flex-wrap">
+
                         {/* Left */}
                         <div className="flex-1 min-w-0">
-                            {/* Date + pass badge */}
-                            <div className="flex items-center gap-3 mb-2">
-                                <p
-                                    className="text-sm font-black tracking-widest"
-                                    style={{
-                                        color: "var(--color-primary)",
-                                        fontFamily: "var(--font-orbitron)",
-                                    }}
-                                >
+                            {/* Date + badge */}
+                            <div className="flex items-center gap-3 mb-3 flex-wrap">
+                                <p className="font-black tracking-widest text-xs lg:text-sm text-[var(--color-primary)] font-[var(--font-orbitron)]">
                                     {test.date}
                                 </p>
                                 <span
-                                    className="text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded-lg"
+                                    className="font-bold uppercase tracking-widest text-[0.6rem] lg:text-xs px-2.5 py-1 rounded-lg font-[var(--font-orbitron)]"
                                     style={{
-                                        background: test.passed ? "var(--color-primary)20" : "#ef444420",
+                                        background: test.passed ? "color-mix(in srgb, var(--color-primary) 15%, transparent)" : "rgba(239,68,68,0.12)",
                                         color: test.passed ? "var(--color-primary)" : "#ef4444",
-                                        fontFamily: "var(--font-orbitron)",
                                         border: `1px solid ${test.passed ? "var(--color-primary)" : "#ef4444"}`,
                                     }}
                                 >
-                                    {test.passed ? "✅ PASS" : "❌ FAIL"}
+                                    {test.passed ? "✅ Pass" : "❌ Fail"}
                                 </span>
                             </div>
 
                             {/* Total score */}
                             <p
-                                className="text-2xl font-black mb-2"
-                                style={{
-                                    color: test.passed ? "var(--color-primary)" : "#ef4444",
-                                    fontFamily: "var(--font-orbitron)",
-                                }}
+                                className="font-black text-2xl lg:text-3xl leading-none mb-3 font-[var(--font-orbitron)]"
+                                style={{ color: test.passed ? "var(--color-primary)" : "#ef4444" }}
                             >
                                 {test.totalScore}
-                                <span
-                                    className="text-sm font-medium ml-1"
-                                    style={{
-                                        color: "var(--color-text-muted)",
-                                        fontFamily: "var(--font-rajdhani)",
-                                    }}
-                                >
+                                <span className="font-medium text-sm lg:text-base text-[var(--color-muted)] font-[var(--font-rajdhani)] ml-1">
                                     / 180
                                 </span>
                             </p>
 
                             {/* Section scores */}
-                            <div
-                                className="flex flex-wrap gap-3 text-xs font-semibold"
-                                style={{
-                                    color: "var(--color-text-muted)",
-                                    fontFamily: "var(--font-rajdhani)",
-                                }}
-                            >
+                            <div className="flex flex-wrap gap-3 font-semibold text-xs lg:text-sm text-[var(--color-muted)] font-[var(--font-rajdhani)]">
                                 <span>📖 Vocab: {test.vocabScore}</span>
                                 <span>✏️ Grammar: {test.grammarScore}</span>
                                 <span>📄 Reading: {test.readingScore}</span>
@@ -119,13 +84,7 @@ export default function MockTestList({ tests }: MockTestListProps) {
                             </div>
 
                             {test.notes && (
-                                <p
-                                    className="mt-2 text-xs truncate"
-                                    style={{
-                                        color: "var(--color-text-muted)",
-                                        fontFamily: "var(--font-rajdhani)",
-                                    }}
-                                >
+                                <p className="mt-2 text-xs lg:text-sm text-[var(--color-muted)] font-[var(--font-rajdhani)] line-clamp-1">
                                     {test.notes}
                                 </p>
                             )}
@@ -135,21 +94,7 @@ export default function MockTestList({ tests }: MockTestListProps) {
                         <button
                             onClick={() => handleDelete(test._id)}
                             disabled={deletingId === test._id}
-                            className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all disabled:opacity-50 shrink-0"
-                            style={{
-                                background: "var(--color-bg)",
-                                border: "1px solid var(--color-border)",
-                                color: "var(--color-text-muted)",
-                                fontFamily: "var(--font-orbitron)",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.borderColor = "#ef4444";
-                                e.currentTarget.style.color = "#ef4444";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.borderColor = "var(--color-border)";
-                                e.currentTarget.style.color = "var(--color-text-muted)";
-                            }}
+                            className="shrink-0 font-bold uppercase tracking-widest rounded-lg transition-all text-[0.6rem] lg:text-xs px-3 py-1.5 font-[var(--font-orbitron)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-muted)] hover:border-red-500 hover:text-red-500 disabled:opacity-50"
                         >
                             {deletingId === test._id ? "..." : "Delete"}
                         </button>

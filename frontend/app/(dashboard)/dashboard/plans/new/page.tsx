@@ -16,37 +16,26 @@ export default function NewPlanPage() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div className="max-w-2xl mx-auto flex flex-col gap-6">
+
             <button
                 onClick={() => router.back()}
-                className="text-sm font-bold uppercase tracking-widest transition-all"
-                style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-primary)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-text-muted)")}
+                className="self-start font-bold uppercase tracking-widest text-xs lg:text-sm transition-all font-[var(--font-orbitron)] text-[var(--color-muted)] hover:text-[var(--color-primary)]"
             >
                 ← Back
             </button>
 
             <div>
-                <h1
-                    className="text-2xl font-black tracking-wider"
-                    style={{ color: "var(--color-text)", fontFamily: "var(--font-orbitron)" }}
-                >
-                    CREATE STUDY PLAN
+                <h1 className="font-black tracking-wider text-2xl lg:text-3xl text-[var(--color-text)] font-[var(--font-orbitron)]">
+                    Create Study Plan
                 </h1>
-                <p
-                    className="text-base font-medium mt-1"
-                    style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-                >
+                <p className="font-medium text-sm lg:text-base text-[var(--color-muted)] font-[var(--font-rajdhani)] mt-1">
                     Set your dates — weekly target fields appear automatically.
                 </p>
             </div>
 
-            <div
-                className="rounded-2xl p-8 border"
-                style={{ background: "var(--color-card)", borderColor: "var(--color-border)" }}
-            >
-                <StudyPlanForm onSubmit={handleSubmit} submitLabel="CREATE PLAN" />
+            <div className="rounded-2xl border bg-[var(--color-card)] border-[var(--color-border)]" style={{ padding: "2rem" }}>
+                <StudyPlanForm onSubmit={handleSubmit} submitLabel="Create Plan" />
             </div>
         </div>
     );

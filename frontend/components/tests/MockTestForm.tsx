@@ -18,16 +18,6 @@ const defaultForm: MockTestFormData = {
     notes: "",
 };
 
-const inputClass =
-    "w-full px-4 py-3 rounded-xl text-base font-medium outline-none transition-all";
-
-const inputStyle = {
-    background: "var(--color-bg)",
-    border: "1px solid var(--color-border)",
-    color: "var(--color-text)",
-    fontFamily: "var(--font-rajdhani)",
-};
-
 const scoreFields = [
     { name: "totalScore", label: "Total Score", icon: "🎯", max: 180 },
     { name: "vocabScore", label: "Vocab Score", icon: "📖", max: 60 },
@@ -36,13 +26,14 @@ const scoreFields = [
     { name: "listeningScore", label: "Listening Score", icon: "🎧", max: 60 },
 ];
 
+const inputClass = "w-full rounded-xl text-sm lg:text-base font-medium outline-none transition-all font-[var(--font-rajdhani)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text)] focus:border-[var(--color-primary)]";
+const inputPadding = { padding: "0.75rem 1rem" };
+
 export default function MockTestForm({ onSubmit }: MockTestFormProps) {
     const [form, setForm] = useState<MockTestFormData>(defaultForm);
     const [submitting, setSubmitting] = useState(false);
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setForm((prev) => ({
             ...prev,
@@ -60,13 +51,11 @@ export default function MockTestForm({ onSubmit }: MockTestFormProps) {
     const isPassing = form.totalScore >= form.passThreshold;
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
             {/* Date */}
-            <div className="flex flex-col gap-1.5">
-                <label
-                    className="text-xs font-bold uppercase tracking-widest"
-                    style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                >
+            <div className="flex flex-col gap-2">
+                <label className="font-black uppercase tracking-widest text-[0.65rem] lg:text-xs text-[var(--color-muted)] font-[var(--font-orbitron)]">
                     📅 Date
                 </label>
                 <input
@@ -76,61 +65,50 @@ export default function MockTestForm({ onSubmit }: MockTestFormProps) {
                     onChange={handleChange}
                     required
                     className={inputClass}
-                    style={inputStyle}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+                    style={inputPadding}
                 />
             </div>
 
-            {/* Score fields */}
+            {/* Score fields grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {scoreFields.map(({ name, label, icon, max }) => (
-                    <div key={name} className="flex flex-col gap-1.5">
-                        <label
-                            className="text-xs font-bold uppercase tracking-widest"
-                            style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                        >
-                            {icon} {label}{" "}
-                            <span style={{ fontWeight: 400, textTransform: "none" }}>
-                                (max {max})
-                            </span>
-                        </label>
-                        <input
-                            type="number"
-                            name={name}
-                            value={form[name as keyof MockTestFormData] as number}
-                            onChange={handleChange}
-                            min={0}
-                            max={max}
-                            className={inputClass}
-                            style={{
-                                ...inputStyle,
-                                // Highlight totalScore green/red based on pass
-                                ...(name === "totalScore"
-                                    ? {
-                                        borderColor: isPassing ? "var(--color-primary)" : "#ef4444",
-                                        color: isPassing ? "var(--color-primary)" : "#ef4444",
-                                    }
-                                    : {}),
-                            }}
-                            onFocus={(e) =>
-                                (e.target.style.borderColor = "var(--color-primary)")
-                            }
-                            onBlur={(e) => {
-                                if (name !== "totalScore") {
-                                    e.target.style.borderColor = "var(--color-border)";
-                                }
-                            }}
-                        />
-                    </div>
-                ))}
+                {scoreFields.map(({ name, label, icon, max }) => {
+                    const isTotalScore = name === "totalScore";
+                    return (
+                        <div key={name} className="flex flex-col gap-2">
+                            <label className="font-black uppercase tracking-widest text-[0.65rem] lg:text-xs text-[var(--color-muted)] font-[var(--font-orbitron)]">
+                                {icon} {label} <span className="normal-case font-normal">(max {max})</span>
+                            </label>
+                            <input
+                                type="number"
+                                name={name}
+                                value={form[name as keyof MockTestFormData] as number}
+                                onChange={handleChange}
+                                min={0}
+                                max={max}
+                                className="w-full rounded-xl text-sm lg:text-base font-medium outline-none transition-all font-[var(--font-rajdhani)]"
+                                style={{
+                                    ...inputPadding,
+                                    background: "var(--color-bg)",
+                                    color: isTotalScore
+                                        ? isPassing ? "var(--color-primary)" : "#ef4444"
+                                        : "var(--color-text)",
+                                    border: `1px solid ${isTotalScore
+                                        ? isPassing ? "var(--color-primary)" : "#ef4444"
+                                        : "var(--color-border)"}`,
+                                }}
+                                onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
+                                onBlur={(e) => {
+                                    if (!isTotalScore) e.target.style.borderColor = "var(--color-border)";
+                                    else e.target.style.borderColor = isPassing ? "var(--color-primary)" : "#ef4444";
+                                }}
+                            />
+                        </div>
+                    );
+                })}
 
                 {/* Pass threshold */}
-                <div className="flex flex-col gap-1.5">
-                    <label
-                        className="text-xs font-bold uppercase tracking-widest"
-                        style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                    >
+                <div className="flex flex-col gap-2">
+                    <label className="font-black uppercase tracking-widest text-[0.65rem] lg:text-xs text-[var(--color-muted)] font-[var(--font-orbitron)]">
                         🏁 Pass Threshold
                     </label>
                     <input
@@ -141,39 +119,28 @@ export default function MockTestForm({ onSubmit }: MockTestFormProps) {
                         min={0}
                         max={180}
                         className={inputClass}
-                        style={inputStyle}
-                        onFocus={(e) =>
-                            (e.target.style.borderColor = "var(--color-primary)")
-                        }
-                        onBlur={(e) =>
-                            (e.target.style.borderColor = "var(--color-border)")
-                        }
+                        style={inputPadding}
                     />
                 </div>
             </div>
 
             {/* Live pass/fail indicator */}
             <div
-                className="rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-widest text-center"
+                className="rounded-xl text-xs lg:text-sm font-black uppercase tracking-widest text-center font-[var(--font-orbitron)]"
                 style={{
-                    background: isPassing ? "var(--color-primary)20" : "#ef444420",
+                    padding: "0.75rem 1rem",
+                    background: isPassing ? "color-mix(in srgb, var(--color-primary) 15%, transparent)" : "rgba(239,68,68,0.12)",
                     border: `1px solid ${isPassing ? "var(--color-primary)" : "#ef4444"}`,
                     color: isPassing ? "var(--color-primary)" : "#ef4444",
-                    fontFamily: "var(--font-orbitron)",
                 }}
             >
-                {isPassing ? "✅ PASSING" : "❌ FAILING"} — {form.totalScore} /{" "}
-                {form.passThreshold}
+                {isPassing ? "✅ Passing" : "❌ Failing"} — {form.totalScore} / {form.passThreshold}
             </div>
 
             {/* Notes */}
-            <div className="flex flex-col gap-1.5">
-                <label
-                    className="text-xs font-bold uppercase tracking-widest"
-                    style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                >
-                    📝 Notes{" "}
-                    <span style={{ fontWeight: 400, textTransform: "none" }}>(optional)</span>
+            <div className="flex flex-col gap-2">
+                <label className="font-black uppercase tracking-widest text-[0.65rem] lg:text-xs text-[var(--color-muted)] font-[var(--font-orbitron)]">
+                    📝 Notes <span className="normal-case font-normal">(optional)</span>
                 </label>
                 <textarea
                     name="notes"
@@ -183,24 +150,17 @@ export default function MockTestForm({ onSubmit }: MockTestFormProps) {
                     maxLength={1000}
                     placeholder="How did it go? What to improve?"
                     className={inputClass + " resize-none"}
-                    style={inputStyle}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+                    style={inputPadding}
                 />
             </div>
 
             <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-3 rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                    background: "var(--color-primary)",
-                    color: "#000",
-                    fontFamily: "var(--font-orbitron)",
-                    fontSize: "13px",
-                }}
+                className="w-full rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-xs lg:text-sm font-[var(--font-orbitron)] bg-[var(--color-primary)] text-black hover:opacity-90"
+                style={{ padding: "0.875rem", marginTop: "0.5rem" }}
             >
-                {submitting ? "SAVING..." : "LOG TEST →"}
+                {submitting ? "Saving..." : "Log Test →"}
             </button>
         </form>
     );

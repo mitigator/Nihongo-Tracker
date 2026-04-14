@@ -28,17 +28,6 @@ const emptyWeek = (week: number): WeekTarget => ({
     notes: "",
 });
 
-const inputClass =
-    "w-full px-4 py-3 rounded-xl text-base font-medium outline-none transition-all";
-
-const inputStyle = {
-    background: "var(--color-bg)",
-    border: "1px solid var(--color-border)",
-    color: "var(--color-text)",
-    fontFamily: "var(--font-rajdhani)",
-};
-
-// Calculate number of weeks between two dates
 const calcWeeks = (start: string, end: string): number => {
     if (!start || !end || end <= start) return 0;
     const s = new Date(start + "T00:00:00Z");
@@ -46,49 +35,33 @@ const calcWeeks = (start: string, end: string): number => {
     return Math.ceil((e.getTime() - s.getTime()) / (1000 * 60 * 60 * 24 * 7));
 };
 
-export default function StudyPlanForm({
-    initialData,
-    onSubmit,
-    submitLabel = "CREATE PLAN",
-}: StudyPlanFormProps) {
-    const [form, setForm] = useState<StudyPlanFormData>({
-        ...defaultForm,
-        ...initialData,
-    });
+const inputClass = "w-full rounded-xl text-sm lg:text-base font-medium outline-none transition-all font-[var(--font-rajdhani)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text)] focus:border-[var(--color-primary)]";
+const inputPadding = { padding: "0.75rem 1rem" };
+const labelClass = "font-black uppercase tracking-widest text-[0.65rem] lg:text-xs text-[var(--color-muted)] font-[var(--font-orbitron)]";
+
+export default function StudyPlanForm({ initialData, onSubmit, submitLabel = "Create Plan" }: StudyPlanFormProps) {
+    const [form, setForm] = useState<StudyPlanFormData>({ ...defaultForm, ...initialData });
     const [submitting, setSubmitting] = useState(false);
 
-    // Auto-resize weeklyTargets when dates change
     useEffect(() => {
         const weeks = calcWeeks(form.startDate, form.endDate);
         if (weeks <= 0) return;
-
         setForm((prev) => {
             const existing = prev.weeklyTargets;
-            const updated: WeekTarget[] = Array.from({ length: weeks }, (_, i) => {
-                return existing[i] ?? emptyWeek(i + 1);
-            });
+            const updated: WeekTarget[] = Array.from({ length: weeks }, (_, i) => existing[i] ?? emptyWeek(i + 1));
             return { ...prev, weeklyTargets: updated };
         });
     }, [form.startDate, form.endDate]);
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleWeekChange = (
-        weekIndex: number,
-        field: keyof WeekTarget,
-        value: string
-    ) => {
+    const handleWeekChange = (weekIndex: number, field: keyof WeekTarget, value: string) => {
         setForm((prev) => {
             const updated = [...prev.weeklyTargets];
-            updated[weekIndex] = {
-                ...updated[weekIndex],
-                [field]: field === "notes" ? value : Number(value),
-            };
+            updated[weekIndex] = { ...updated[weekIndex], [field]: field === "notes" ? value : Number(value) };
             return { ...prev, weeklyTargets: updated };
         });
     };
@@ -103,15 +76,11 @@ export default function StudyPlanForm({
     const weeks = calcWeeks(form.startDate, form.endDate);
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+
             {/* Title */}
-            <div className="flex flex-col gap-1.5">
-                <label
-                    className="text-xs font-bold uppercase tracking-widest"
-                    style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                >
-                    📋 Plan Title
-                </label>
+            <div className="flex flex-col gap-2">
+                <label className={labelClass}>📋 Plan Title</label>
                 <input
                     type="text"
                     name="title"
@@ -120,44 +89,30 @@ export default function StudyPlanForm({
                     required
                     placeholder="e.g. JLPT N5 — 8 Week Grind"
                     className={inputClass}
-                    style={inputStyle}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+                    style={inputPadding}
                 />
             </div>
 
             {/* Level */}
-            <div className="flex flex-col gap-1.5">
-                <label
-                    className="text-xs font-bold uppercase tracking-widest"
-                    style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                >
-                    🎯 JLPT Level
-                </label>
+            <div className="flex flex-col gap-2">
+                <label className={labelClass}>🎯 JLPT Level</label>
                 <select
                     name="level"
                     value={form.level}
                     onChange={handleChange}
                     className={inputClass}
-                    style={inputStyle}
+                    style={{ ...inputPadding, appearance: "auto" }}
                 >
                     {LEVELS.map((l) => (
-                        <option key={l} value={l}>
-                            {l.toUpperCase()}
-                        </option>
+                        <option key={l} value={l}>{l.toUpperCase()}</option>
                     ))}
                 </select>
             </div>
 
             {/* Dates */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                    <label
-                        className="text-xs font-bold uppercase tracking-widest"
-                        style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                    >
-                        📅 Start Date
-                    </label>
+                <div className="flex flex-col gap-2">
+                    <label className={labelClass}>📅 Start Date</label>
                     <input
                         type="date"
                         name="startDate"
@@ -165,18 +120,11 @@ export default function StudyPlanForm({
                         onChange={handleChange}
                         required
                         className={inputClass}
-                        style={inputStyle}
-                        onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-                        onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+                        style={inputPadding}
                     />
                 </div>
-                <div className="flex flex-col gap-1.5">
-                    <label
-                        className="text-xs font-bold uppercase tracking-widest"
-                        style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                    >
-                        🏁 End Date
-                    </label>
+                <div className="flex flex-col gap-2">
+                    <label className={labelClass}>🏁 End Date</label>
                     <input
                         type="date"
                         name="endDate"
@@ -184,9 +132,7 @@ export default function StudyPlanForm({
                         onChange={handleChange}
                         required
                         className={inputClass}
-                        style={inputStyle}
-                        onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-                        onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+                        style={inputPadding}
                     />
                 </div>
             </div>
@@ -194,12 +140,10 @@ export default function StudyPlanForm({
             {/* Week count indicator */}
             {weeks > 0 && (
                 <div
-                    className="text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-xl text-center"
+                    className="font-bold uppercase tracking-widest text-[0.65rem] lg:text-xs text-center rounded-xl font-[var(--font-orbitron)] text-[var(--color-primary)] border border-[var(--color-primary)]"
                     style={{
-                        background: "var(--color-primary)20",
-                        border: "1px solid var(--color-primary)",
-                        color: "var(--color-primary)",
-                        fontFamily: "var(--font-orbitron)",
+                        padding: "0.625rem 1rem",
+                        background: "color-mix(in srgb, var(--color-primary) 12%, transparent)",
                     }}
                 >
                     {weeks} week{weeks !== 1 ? "s" : ""} detected — fill targets below
@@ -208,27 +152,16 @@ export default function StudyPlanForm({
 
             {/* Weekly targets */}
             {form.weeklyTargets.length > 0 && (
-                <div className="space-y-4">
-                    <h3
-                        className="text-xs font-bold uppercase tracking-widest"
-                        style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                    >
-                        Weekly Targets
-                    </h3>
+                <div className="flex flex-col gap-4">
+                    <h3 className={labelClass}>Weekly Targets</h3>
 
                     {form.weeklyTargets.map((wt, i) => (
                         <div
                             key={i}
-                            className="rounded-2xl border p-4 space-y-3"
-                            style={{
-                                background: "var(--color-bg)",
-                                borderColor: "var(--color-border)",
-                            }}
+                            className="rounded-2xl border flex flex-col gap-3 bg-[var(--color-bg)] border-[var(--color-border)]"
+                            style={{ padding: "1rem 1.25rem" }}
                         >
-                            <p
-                                className="text-xs font-black uppercase tracking-widest"
-                                style={{ color: "var(--color-primary)", fontFamily: "var(--font-orbitron)" }}
-                            >
+                            <p className="font-black uppercase tracking-widest text-[0.65rem] lg:text-xs text-[var(--color-primary)] font-[var(--font-orbitron)]">
                                 Week {wt.week}
                             </p>
 
@@ -239,11 +172,8 @@ export default function StudyPlanForm({
                                     { field: "grammarTarget", label: "Grammar", icon: "✏️" },
                                     { field: "listeningTarget", label: "Listening", icon: "🎧" },
                                 ].map(({ field, label, icon }) => (
-                                    <div key={field} className="flex flex-col gap-1">
-                                        <label
-                                            className="text-xs font-bold uppercase tracking-widest"
-                                            style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)", fontSize: "9px" }}
-                                        >
+                                    <div key={field} className="flex flex-col gap-1.5">
+                                        <label className="font-black uppercase tracking-widest text-[0.5rem] lg:text-[0.6rem] text-[var(--color-muted)] font-[var(--font-orbitron)]">
                                             {icon} {label}
                                         </label>
                                         <input
@@ -251,10 +181,8 @@ export default function StudyPlanForm({
                                             value={wt[field as keyof WeekTarget] as number}
                                             onChange={(e) => handleWeekChange(i, field as keyof WeekTarget, e.target.value)}
                                             min={0}
-                                            className="w-full px-3 py-2 rounded-lg text-sm font-medium outline-none transition-all"
-                                            style={inputStyle}
-                                            onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-                                            onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+                                            className="w-full rounded-lg text-sm font-medium outline-none transition-all font-[var(--font-rajdhani)] bg-[var(--color-card)] border border-[var(--color-border)] text-[var(--color-text)] focus:border-[var(--color-primary)]"
+                                            style={{ padding: "0.5rem 0.75rem" }}
                                         />
                                     </div>
                                 ))}
@@ -265,10 +193,8 @@ export default function StudyPlanForm({
                                 value={wt.notes}
                                 onChange={(e) => handleWeekChange(i, "notes", e.target.value)}
                                 placeholder="Week notes (optional)"
-                                className="w-full px-3 py-2 rounded-lg text-sm font-medium outline-none transition-all"
-                                style={inputStyle}
-                                onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-                                onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+                                className="w-full rounded-lg text-sm font-medium outline-none transition-all font-[var(--font-rajdhani)] bg-[var(--color-card)] border border-[var(--color-border)] text-[var(--color-text)] focus:border-[var(--color-primary)]"
+                                style={{ padding: "0.5rem 0.75rem" }}
                             />
                         </div>
                     ))}
@@ -278,15 +204,10 @@ export default function StudyPlanForm({
             <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-3 rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                    background: "var(--color-primary)",
-                    color: "#000",
-                    fontFamily: "var(--font-orbitron)",
-                    fontSize: "13px",
-                }}
+                className="w-full rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-xs lg:text-sm font-[var(--font-orbitron)] bg-[var(--color-primary)] text-black hover:opacity-90"
+                style={{ padding: "0.875rem", marginTop: "0.5rem" }}
             >
-                {submitting ? "SAVING..." : `${submitLabel} →`}
+                {submitting ? "Saving..." : `${submitLabel} →`}
             </button>
         </form>
     );

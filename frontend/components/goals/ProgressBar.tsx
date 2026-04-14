@@ -7,46 +7,31 @@ interface ProgressBarProps {
     unit: string;
 }
 
-export default function ProgressBar({
-    label,
-    icon,
-    actual,
-    target,
-    percent,
-    unit,
-}: ProgressBarProps) {
+export default function ProgressBar({ label, icon, actual, target, percent, unit }: ProgressBarProps) {
     const isComplete = percent >= 100;
+    const clamped = Math.min(percent, 100);
 
     return (
         <div
-            className="rounded-2xl border px-5 py-4"
+            className="rounded-2xl border flex flex-col gap-3 bg-[var(--color-card)]"
             style={{
-                background: "var(--color-card)",
                 borderColor: isComplete ? "var(--color-primary)" : "var(--color-border)",
+                padding: "1.25rem",
             }}
         >
             {/* Top row */}
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <span className="text-lg">{icon}</span>
-                    <span
-                        className="text-xs font-bold uppercase tracking-widest"
-                        style={{
-                            color: "var(--color-text-muted)",
-                            fontFamily: "var(--font-orbitron)",
-                        }}
-                    >
+                    <span className="text-lg lg:text-xl leading-none">{icon}</span>
+                    <span className="font-bold uppercase tracking-widest text-[0.6rem] lg:text-[0.7rem] text-[var(--color-muted)] font-[var(--font-orbitron)]">
                         {label}
                     </span>
                 </div>
-                <div className="flex items-center gap-2">
-                    {isComplete && <span className="text-xs">✅</span>}
+                <div className="flex items-center gap-1.5">
+                    {isComplete && <span className="text-sm">✅</span>}
                     <span
-                        className="text-xs font-bold"
-                        style={{
-                            color: isComplete ? "var(--color-primary)" : "var(--color-text-muted)",
-                            fontFamily: "var(--font-orbitron)",
-                        }}
+                        className="font-black text-xs lg:text-sm font-[var(--font-orbitron)]"
+                        style={{ color: isComplete ? "var(--color-primary)" : "var(--color-muted)" }}
                     >
                         {percent}%
                     </span>
@@ -54,39 +39,22 @@ export default function ProgressBar({
             </div>
 
             {/* Bar */}
-            <div
-                className="w-full h-2 rounded-full overflow-hidden mb-2"
-                style={{ background: "var(--color-border)" }}
-            >
+            <div className="w-full h-2 rounded-full overflow-hidden bg-[var(--color-border)]">
                 <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{
-                        width: `${percent}%`,
-                        background: isComplete
-                            ? "var(--color-primary)"
-                            : "var(--color-secondary)",
+                        width: `${clamped}%`,
+                        background: isComplete ? "var(--color-primary)" : "var(--color-secondary)",
                     }}
                 />
             </div>
 
             {/* Bottom row */}
-            <div className="flex justify-between">
-                <span
-                    className="text-xs font-semibold"
-                    style={{
-                        color: "var(--color-text)",
-                        fontFamily: "var(--font-rajdhani)",
-                    }}
-                >
+            <div className="flex items-center justify-between">
+                <span className="font-semibold text-xs lg:text-sm text-[var(--color-text)] font-[var(--font-rajdhani)]">
                     {actual} {unit}
                 </span>
-                <span
-                    className="text-xs"
-                    style={{
-                        color: "var(--color-text-muted)",
-                        fontFamily: "var(--font-rajdhani)",
-                    }}
-                >
+                <span className="text-xs lg:text-sm text-[var(--color-muted)] font-[var(--font-rajdhani)]">
                     goal: {target} {unit}
                 </span>
             </div>

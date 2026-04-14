@@ -7,7 +7,7 @@ interface GoalFormProps {
     initialData?: Partial<GoalFormData>;
     onSubmit: (data: GoalFormData) => Promise<boolean>;
     submitLabel?: string;
-    weekStartDate?: string; // if passed, week is locked (editing existing)
+    weekStartDate?: string;
 }
 
 const defaultForm: GoalFormData = {
@@ -15,16 +15,6 @@ const defaultForm: GoalFormData = {
     kanjiTarget: 0,
     grammarTarget: 0,
     listeningTarget: 0,
-};
-
-const inputClass =
-    "w-full px-4 py-3 rounded-xl text-base font-medium outline-none transition-all";
-
-const inputStyle = {
-    background: "var(--color-bg)",
-    border: "1px solid var(--color-border)",
-    color: "var(--color-text)",
-    fontFamily: "var(--font-rajdhani)",
 };
 
 const fields = [
@@ -37,13 +27,10 @@ const fields = [
 export default function GoalForm({
     initialData,
     onSubmit,
-    submitLabel = "SAVE GOALS",
+    submitLabel = "Save Goals",
     weekStartDate,
 }: GoalFormProps) {
-    const [form, setForm] = useState<GoalFormData>({
-        ...defaultForm,
-        ...initialData,
-    });
+    const [form, setForm] = useState<GoalFormData>({ ...defaultForm, ...initialData });
     const [submitting, setSubmitting] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,43 +40,26 @@ export default function GoalForm({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitting(true);
-        const payload: GoalFormData = weekStartDate
-            ? { ...form, weekStartDate }
-            : form;
+        const payload: GoalFormData = weekStartDate ? { ...form, weekStartDate } : form;
         await onSubmit(payload);
         setSubmitting(false);
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Week label */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+            {/* Week lock indicator */}
             {weekStartDate && (
-                <div
-                    className="text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-xl"
-                    style={{
-                        background: "var(--color-bg)",
-                        border: "1px solid var(--color-border)",
-                        color: "var(--color-text-muted)",
-                        fontFamily: "var(--font-orbitron)",
-                    }}
-                >
+                <div className="font-bold uppercase tracking-widest text-[0.65rem] lg:text-xs px-4 py-2.5 rounded-xl font-[var(--font-orbitron)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-muted)]">
                     📅 Week of {weekStartDate}
                 </div>
             )}
 
             {fields.map(({ name, label, icon, unit }) => (
-                <div key={name} className="flex flex-col gap-1.5">
-                    <label
-                        className="text-xs font-bold uppercase tracking-widest"
-                        style={{
-                            color: "var(--color-text-muted)",
-                            fontFamily: "var(--font-orbitron)",
-                        }}
-                    >
+                <div key={name} className="flex flex-col gap-2">
+                    <label className="font-black uppercase tracking-widest text-[0.65rem] lg:text-xs text-[var(--color-muted)] font-[var(--font-orbitron)]">
                         {icon} {label}{" "}
-                        <span style={{ fontWeight: 400, textTransform: "none" }}>
-                            ({unit})
-                        </span>
+                        <span className="normal-case font-normal">({unit})</span>
                     </label>
                     <input
                         type="number"
@@ -97,14 +67,8 @@ export default function GoalForm({
                         value={form[name as keyof GoalFormData] as number}
                         onChange={handleChange}
                         min={0}
-                        className={inputClass}
-                        style={inputStyle}
-                        onFocus={(e) =>
-                            (e.target.style.borderColor = "var(--color-primary)")
-                        }
-                        onBlur={(e) =>
-                            (e.target.style.borderColor = "var(--color-border)")
-                        }
+                        className="w-full rounded-xl text-sm lg:text-base font-medium outline-none transition-all font-[var(--font-rajdhani)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text)] focus:border-[var(--color-primary)]"
+                        style={{ padding: "0.75rem 1rem" }}
                     />
                 </div>
             ))}
@@ -112,15 +76,10 @@ export default function GoalForm({
             <button
                 type="submit"
                 disabled={submitting}
-                className="w-full py-3 rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-                style={{
-                    background: "var(--color-primary)",
-                    color: "#000",
-                    fontFamily: "var(--font-orbitron)",
-                    fontSize: "13px",
-                }}
+                className="w-full rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-xs lg:text-sm font-[var(--font-orbitron)] bg-[var(--color-primary)] text-black hover:opacity-90"
+                style={{ padding: "0.875rem", marginTop: "0.5rem" }}
             >
-                {submitting ? "SAVING..." : `${submitLabel} →`}
+                {submitting ? "Saving..." : `${submitLabel} →`}
             </button>
         </form>
     );

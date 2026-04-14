@@ -24,6 +24,9 @@ export default function PlanCard({ plan }: PlanCardProps) {
     const isActive = plan.currentWeek !== null;
     const totalWeeks = plan.weeklyTargets.length;
     const levelColor = levelColors[plan.level] ?? "var(--color-primary)";
+    const currentTargets = isActive && plan.currentWeek
+        ? plan.weeklyTargets[plan.currentWeek - 1]
+        : null;
 
     const handleDelete = async () => {
         if (!confirm("Delete this plan? This cannot be undone.")) return;
@@ -32,75 +35,51 @@ export default function PlanCard({ plan }: PlanCardProps) {
 
     return (
         <div
-            className="rounded-2xl border px-5 py-4 transition-all"
+            className="rounded-2xl border transition-all bg-[var(--color-card)] hover:border-[var(--color-primary)]"
             style={{
-                background: "var(--color-card)",
                 borderColor: isActive ? "var(--color-primary)" : "var(--color-border)",
+                padding: "1.25rem 1.5rem",
             }}
-            onMouseEnter={(e) =>
-                (e.currentTarget.style.borderColor = "var(--color-primary)")
-            }
-            onMouseLeave={(e) =>
-            (e.currentTarget.style.borderColor = isActive
-                ? "var(--color-primary)"
-                : "var(--color-border)")
-            }
         >
             <div className="flex items-start justify-between gap-4 flex-wrap">
+
                 {/* Left */}
-                <div className="flex-1 min-w-0 space-y-2">
-                    {/* Title + level badge */}
+                <div className="flex-1 min-w-0 flex flex-col gap-2">
+
+                    {/* Title + badges */}
                     <div className="flex items-center gap-2 flex-wrap">
-                        <p
-                            className="text-sm font-black tracking-wide"
-                            style={{ color: "var(--color-text)", fontFamily: "var(--font-orbitron)" }}
-                        >
+                        <p className="font-black tracking-wide text-sm lg:text-base text-[var(--color-text)] font-[var(--font-orbitron)]">
                             {plan.title}
                         </p>
                         <span
-                            className="text-xs font-black uppercase tracking-widest px-2 py-0.5 rounded-lg"
+                            className="font-black uppercase tracking-widest text-[0.55rem] lg:text-[0.65rem] px-2 py-0.5 rounded-lg font-[var(--font-orbitron)]"
                             style={{
-                                background: `${levelColor}20`,
+                                background: `color-mix(in srgb, ${levelColor} 15%, transparent)`,
                                 border: `1px solid ${levelColor}`,
                                 color: levelColor,
-                                fontFamily: "var(--font-orbitron)",
                             }}
                         >
                             {plan.level}
                         </span>
                         {isActive && (
-                            <span
-                                className="text-xs font-black uppercase tracking-widest px-2 py-0.5 rounded-lg"
-                                style={{
-                                    background: "var(--color-primary)20",
-                                    border: "1px solid var(--color-primary)",
-                                    color: "var(--color-primary)",
-                                    fontFamily: "var(--font-orbitron)",
-                                }}
-                            >
-                                ACTIVE · WK {plan.currentWeek}/{totalWeeks}
+                            <span className="font-black uppercase tracking-widest text-[0.55rem] lg:text-[0.65rem] px-2 py-0.5 rounded-lg font-[var(--font-orbitron)] bg-[color-mix(in_srgb,var(--color-primary)_15%,transparent)] border border-[var(--color-primary)] text-[var(--color-primary)]">
+                                Active · Wk {plan.currentWeek}/{totalWeeks}
                             </span>
                         )}
                     </div>
 
                     {/* Dates */}
-                    <p
-                        className="text-xs font-semibold"
-                        style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-                    >
+                    <p className="font-semibold text-xs lg:text-sm text-[var(--color-muted)] font-[var(--font-rajdhani)]">
                         {plan.startDate} → {plan.endDate}
                         {totalWeeks > 0 && ` · ${totalWeeks} weeks`}
                     </p>
 
                     {/* Current week targets */}
-                    {isActive && plan.currentWeek && plan.weeklyTargets[plan.currentWeek - 1] && (
-                        <div
-                            className="flex flex-wrap gap-3 text-xs font-semibold"
-                            style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-                        >
-                            <span>📖 {plan.weeklyTargets[plan.currentWeek - 1].vocabTarget} words</span>
-                            <span>🎧 {plan.weeklyTargets[plan.currentWeek - 1].listeningTarget} min</span>
-                            <span>✏️ {plan.weeklyTargets[plan.currentWeek - 1].grammarTarget} grammar</span>
+                    {currentTargets && (
+                        <div className="flex flex-wrap gap-3 font-semibold text-xs lg:text-sm text-[var(--color-muted)] font-[var(--font-rajdhani)]">
+                            <span>📖 {currentTargets.vocabTarget} words</span>
+                            <span>🎧 {currentTargets.listeningTarget} min</span>
+                            <span>✏️ {currentTargets.grammarTarget} grammar</span>
                         </div>
                     )}
                 </div>
@@ -109,41 +88,13 @@ export default function PlanCard({ plan }: PlanCardProps) {
                 <div className="flex items-center gap-2 shrink-0">
                     <button
                         onClick={() => router.push(`/dashboard/plans/${plan._id}/edit`)}
-                        className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all"
-                        style={{
-                            background: "var(--color-bg)",
-                            border: "1px solid var(--color-border)",
-                            color: "var(--color-text-muted)",
-                            fontFamily: "var(--font-orbitron)",
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = "var(--color-primary)";
-                            e.currentTarget.style.color = "var(--color-primary)";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = "var(--color-border)";
-                            e.currentTarget.style.color = "var(--color-text-muted)";
-                        }}
+                        className="font-bold uppercase tracking-widest rounded-lg transition-all text-[0.6rem] lg:text-xs px-3 py-1.5 font-[var(--font-orbitron)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                     >
                         Edit
                     </button>
                     <button
                         onClick={handleDelete}
-                        className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg transition-all"
-                        style={{
-                            background: "var(--color-bg)",
-                            border: "1px solid var(--color-border)",
-                            color: "var(--color-text-muted)",
-                            fontFamily: "var(--font-orbitron)",
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = "#ef4444";
-                            e.currentTarget.style.color = "#ef4444";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = "var(--color-border)";
-                            e.currentTarget.style.color = "var(--color-text-muted)";
-                        }}
+                        className="font-bold uppercase tracking-widest rounded-lg transition-all text-[0.6rem] lg:text-xs px-3 py-1.5 font-[var(--font-orbitron)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-muted)] hover:border-red-500 hover:text-red-500"
                     >
                         Delete
                     </button>

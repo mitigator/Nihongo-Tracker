@@ -6,76 +6,34 @@ interface StreakBadgeProps {
 export default function StreakBadge({ currentStreak, longestStreak }: StreakBadgeProps) {
     const flame = currentStreak >= 7 ? "🔥" : currentStreak >= 3 ? "✨" : "📅";
 
+    const cardStyle = { padding: "1.25rem 1.5rem" };
+
     return (
-        <div className="flex flex-wrap gap-3">
-            {/* Current streak */}
-            <div
-                className="flex items-center gap-3 rounded-2xl px-5 py-3 border"
-                style={{
-                    background: "var(--color-card)",
-                    borderColor: "var(--color-border)",
-                }}
-            >
-                <span className="text-2xl">{flame}</span>
-                <div>
-                    <p
-                        className="text-xs font-bold uppercase tracking-widest"
-                        style={{
-                            color: "var(--color-text-muted)",
-                            fontFamily: "var(--font-orbitron)",
-                        }}
-                    >
+        <div className="grid grid-cols-2 gap-3 w-full">
+            <div className="flex items-center gap-3 lg:gap-4 rounded-2xl border bg-[var(--color-card)] border-[var(--color-border)]" style={cardStyle}>
+                <span className="text-2xl lg:text-3xl leading-none shrink-0">{flame}</span>
+                <div className="min-w-0">
+                    <p className="font-black uppercase tracking-widest text-[0.5rem] lg:text-[0.6rem] text-[var(--color-muted)] font-[var(--font-orbitron)] mb-1">
                         Current Streak
                     </p>
-                    <p
-                        className="text-2xl font-black leading-tight"
-                        style={{
-                            color: "var(--color-primary)",
-                            fontFamily: "var(--font-orbitron)",
-                        }}
-                    >
+                    <p className="font-black text-2xl lg:text-3xl leading-none text-[var(--color-primary)] font-[var(--font-orbitron)]">
                         {currentStreak}
-                        <span
-                            className="text-sm font-semibold ml-1"
-                            style={{ color: "var(--color-text-muted)" }}
-                        >
+                        <span className="font-semibold text-xs lg:text-sm text-[var(--color-muted)] font-[var(--font-rajdhani)] ml-1">
                             days
                         </span>
                     </p>
                 </div>
             </div>
 
-            {/* Longest streak */}
-            <div
-                className="flex items-center gap-3 rounded-2xl px-5 py-3 border"
-                style={{
-                    background: "var(--color-card)",
-                    borderColor: "var(--color-border)",
-                }}
-            >
-                <span className="text-2xl">🏆</span>
-                <div>
-                    <p
-                        className="text-xs font-bold uppercase tracking-widest"
-                        style={{
-                            color: "var(--color-text-muted)",
-                            fontFamily: "var(--font-orbitron)",
-                        }}
-                    >
+            <div className="flex items-center gap-3 lg:gap-4 rounded-2xl border bg-[var(--color-card)] border-[var(--color-border)]" style={cardStyle}>
+                <span className="text-2xl lg:text-3xl leading-none shrink-0">🏆</span>
+                <div className="min-w-0">
+                    <p className="font-black uppercase tracking-widest text-[0.5rem] lg:text-[0.6rem] text-[var(--color-muted)] font-[var(--font-orbitron)] mb-1">
                         Longest Streak
                     </p>
-                    <p
-                        className="text-2xl font-black leading-tight"
-                        style={{
-                            color: "var(--color-accent)",
-                            fontFamily: "var(--font-orbitron)",
-                        }}
-                    >
+                    <p className="font-black text-2xl lg:text-3xl leading-none text-[var(--color-accent)] font-[var(--font-orbitron)]">
                         {longestStreak}
-                        <span
-                            className="text-sm font-semibold ml-1"
-                            style={{ color: "var(--color-text-muted)" }}
-                        >
+                        <span className="font-semibold text-xs lg:text-sm text-[var(--color-muted)] font-[var(--font-rajdhani)] ml-1">
                             days
                         </span>
                     </p>

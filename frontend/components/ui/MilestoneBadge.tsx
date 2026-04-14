@@ -12,35 +12,25 @@ export default function MilestoneBadge({ streak }: MilestoneBadgeProps) {
     const earned = milestones.filter((m) => streak >= m.days);
 
     if (earned.length === 0) {
-        // Show next milestone progress
-        const next = milestones[milestones.length - 1]; // 7 days is closest
+        const next = milestones[milestones.length - 1];
         return (
-            <div
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold"
-                style={{
-                    background: "var(--color-card)",
-                    borderColor: "var(--color-border)",
-                    color: "var(--color-text-muted)",
-                    fontFamily: "var(--font-rajdhani)",
-                }}
-            >
-                <span>{next.emoji}</span>
-                <span>{next.days - streak} days to {next.label}</span>
+            <div className="w-full flex items-center gap-2.5 rounded-xl px-5 py-3 border bg-[var(--color-card)] border-[var(--color-border)] text-[var(--color-muted)] font-[var(--font-rajdhani)] text-sm lg:text-base font-semibold">
+                <span className="text-lg lg:text-xl">{next.emoji}</span>
+                <span>{next.days - streak} days until {next.label}</span>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 w-full">
             {earned.map((m) => (
                 <div
                     key={m.days}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-black uppercase tracking-widest"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 font-black uppercase tracking-widest text-[0.6rem] lg:text-xs font-[var(--font-orbitron)]"
                     style={{
-                        background: `${m.color}15`,
-                        borderColor: m.color,
+                        background: `${m.color}18`,
+                        border: `1px solid ${m.color}60`,
                         color: m.color,
-                        fontFamily: "var(--font-orbitron)",
                     }}
                 >
                     <span>{m.emoji}</span>

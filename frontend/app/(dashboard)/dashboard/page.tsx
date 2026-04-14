@@ -25,128 +25,69 @@ export default function DashboardPage() {
     const loading = summaryLoading || entriesLoading;
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-5 lg:gap-6">
+
             {/* Header */}
-            <div className="flex items-start justify-between flex-wrap gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div>
-                    <h1
-                        className="text-2xl font-black tracking-wider"
-                        style={{ color: "var(--color-text)", fontFamily: "var(--font-orbitron)" }}
-                    >
-                        DASHBOARD
+                    <h1 className="font-black tracking-wider text-2xl lg:text-3xl text-[var(--color-text)] font-[var(--font-orbitron)]">
+                        Dashboard
                     </h1>
-                    <p
-                        className="text-base font-medium mt-1"
-                        style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-                    >
+                    <p className="font-medium text-sm lg:text-base text-[var(--color-muted)] font-[var(--font-rajdhani)] mt-1">
                         Your Japanese study overview
                     </p>
                 </div>
 
                 <div className="flex items-center gap-2 flex-wrap">
-                    {/* Export CSV */}
                     {entries.length > 0 && (
                         <button
                             onClick={() => exportEntriesToCSV(entries)}
-                            className="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all active:scale-[0.98]"
-                            style={{
-                                background: "var(--color-bg)",
-                                border: "1px solid var(--color-border)",
-                                color: "var(--color-text-muted)",
-                                fontFamily: "var(--font-orbitron)",
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.borderColor = "var(--color-primary)";
-                                e.currentTarget.style.color = "var(--color-primary)";
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.borderColor = "var(--color-border)";
-                                e.currentTarget.style.color = "var(--color-text-muted)";
-                            }}
+                            className="font-black uppercase tracking-widest rounded-xl transition-all active:scale-[0.98] text-[0.65rem] lg:text-xs px-4 py-2.5 font-[var(--font-orbitron)] bg-[var(--color-card)] border border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                         >
                             ↓ Export CSV
                         </button>
                     )}
-
                     {summary?.today.logged && (
                         <button
                             onClick={() => router.push("/dashboard/entries/new")}
-                            className="px-5 py-2.5 rounded-xl font-black tracking-widest uppercase transition-all active:scale-[0.98]"
-                            style={{
-                                background: "var(--color-primary)",
-                                color: "#000",
-                                fontFamily: "var(--font-orbitron)",
-                                fontSize: "12px",
-                            }}
+                            className="font-black tracking-widest uppercase rounded-xl transition-all active:scale-[0.98] text-[0.65rem] lg:text-xs px-4 py-2.5 font-[var(--font-orbitron)] bg-[var(--color-primary)] text-black hover:opacity-90"
                         >
-                            + LOG TODAY
+                            + Log Today
                         </button>
                     )}
                 </div>
             </div>
 
             {loading ? (
-                <div className="space-y-6">
-                    {/* Skeleton for today card */}
-                    <div
-                        className="rounded-2xl border px-6 py-5 space-y-3"
-                        style={{ background: "var(--color-card)", borderColor: "var(--color-border)" }}
-                    >
-                        <div className="w-16 h-3 rounded animate-pulse" style={{ background: "var(--color-border)" }} />
-                        <div className="w-32 h-5 rounded animate-pulse" style={{ background: "var(--color-border)" }} />
+                <div className="flex flex-col gap-4">
+                    <div className="rounded-2xl border bg-[var(--color-card)] border-[var(--color-border)] p-6 animate-pulse flex flex-col gap-3">
+                        <div className="h-3 w-20 rounded bg-[var(--color-border)]" />
+                        <div className="h-5 w-36 rounded bg-[var(--color-border)]" />
                     </div>
-                    {/* Skeleton stat cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <StatCardSkeleton />
-                        <StatCardSkeleton />
-                        <StatCardSkeleton />
+                        <StatCardSkeleton /><StatCardSkeleton /><StatCardSkeleton />
                     </div>
-                    {/* Skeleton entry cards */}
-                    <div className="space-y-3">
-                        <EntryCardSkeleton />
-                        <EntryCardSkeleton />
-                        <EntryCardSkeleton />
+                    <div className="flex flex-col gap-3">
+                        <EntryCardSkeleton /><EntryCardSkeleton /><EntryCardSkeleton />
                     </div>
                 </div>
             ) : (
                 <>
-                    {/* Today card */}
                     {summary && (
-                        <TodayCard
-                            today={summary.today}
-                            onLog={() => router.push("/dashboard/entries/new")}
-                        />
+                        <TodayCard today={summary.today} onLog={() => router.push("/dashboard/entries/new")} />
                     )}
-
-                    {/* Streak + milestone badges */}
                     {summary && (
-                        <div className="space-y-3">
-                            <StreakBadge
-                                currentStreak={summary.streak.current}
-                                longestStreak={summary.streak.longest}
-                            />
+                        <div className="flex flex-col gap-3">
+                            <StreakBadge currentStreak={summary.streak.current} longestStreak={summary.streak.longest} />
                             <MilestoneBadge streak={summary.streak.current} />
                         </div>
                     )}
-
-                    {/* This week vs goals */}
-                    {summary && (
-                        <WeekSummaryCard week={summary.week} goal={summary.goal} />
-                    )}
-
-                    {/* Divider */}
-                    <div className="border-t" style={{ borderColor: "var(--color-border)" }} />
-
-                    {/* Entry list */}
+                    {summary && <WeekSummaryCard week={summary.week} goal={summary.goal} />}
+                    <div className="border-t border-[var(--color-border)]" />
                     <div>
-                        <div className="flex items-center justify-between mb-4">
-                            <h2
-                                className="text-xs font-bold uppercase tracking-widest"
-                                style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                            >
-                                Study Log — {entries.length} entries
-                            </h2>
-                        </div>
+                        <p className="font-bold uppercase tracking-widest text-[0.65rem] lg:text-xs text-[var(--color-muted)] font-[var(--font-orbitron)] mb-4">
+                            Study Log — {entries.length} {entries.length === 1 ? "entry" : "entries"}
+                        </p>
                         <EntryList entries={entries} />
                     </div>
                 </>

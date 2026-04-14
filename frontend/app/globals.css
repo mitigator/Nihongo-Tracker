@@ -1,24 +1,31 @@
 @import "tailwindcss";
 
-@theme {
-  --color-bg: #0b0f1a;
-  --color-card: #111827;
-  --color-primary: #22c55e;
-  --color-secondary: #3b82f6;
-  --color-accent: #a855f7;
-  --color-text: #e5e7eb;
-  --color-muted: #9ca3af;
-  --color-border: #1f2937;
-  --color-xp: #22c55e;
+:root {
+  --color-bg:         #0d0d0d;
+  --color-card:       #161616;
+  --color-primary:    #c0392b;
+  --color-secondary:  #e8d5b0;
+  --color-accent:     #8b7355;
+  --color-text:       #f0ede8;
+  --color-muted:      #8a8075;
+  --color-border:     #2a2520;
+  --color-xp:         #c0392b;
 
-  --font-orbitron: var(--font-orbitron);
-  --font-rajdhani: var(--font-rajdhani);
+  --app-max-width: 1100px;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 body {
@@ -27,6 +34,34 @@ body {
   font-family: var(--font-rajdhani), sans-serif;
   font-size: 16px;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Fluid base font — scales from 15px at 360px to 18px at 1440px */
+html {
+  font-size: clamp(15px, 1.3vw, 18px);
+}
+
+.app-container {
+  width: 100%;
+  max-width: var(--app-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .app-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-container {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
 }
 
 ::-webkit-scrollbar { width: 6px; }

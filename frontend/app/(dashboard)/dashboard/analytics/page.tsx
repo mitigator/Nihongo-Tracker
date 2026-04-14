@@ -25,48 +25,35 @@ export default function AnalyticsPage() {
             await Promise.all([
                 fetchTests(),
                 fetchEntries(),
-                axiosInstance
-                    .get<ChartResponse>("/api/progress/weekly")
-                    .then(({ data }) => setWeeklyData(data.days)),
-                axiosInstance
-                    .get<ChartResponse>("/api/progress/monthly")
-                    .then(({ data }) => setMonthlyData(data.days)),
+                axiosInstance.get<ChartResponse>("/api/progress/weekly").then(({ data }) => setWeeklyData(data.days)),
+                axiosInstance.get<ChartResponse>("/api/progress/monthly").then(({ data }) => setMonthlyData(data.days)),
             ]);
             setLoading(false);
         };
         loadAll();
     }, [fetchTests, fetchEntries]);
 
-    // All-time totals from entries
     const totalVocab = entries.reduce((s, e) => s + e.vocabCount, 0);
     const totalListening = entries.reduce((s, e) => s + e.listeningMinutes, 0);
     const totalGrammar = entries.reduce((s, e) => s + e.grammarCount, 0);
     const totalDays = entries.length;
 
     return (
-        <div className="space-y-8">
+        <div className="flex flex-col gap-8">
+
             {/* Header */}
             <div>
-                <h1
-                    className="text-2xl font-black tracking-wider"
-                    style={{ color: "var(--color-text)", fontFamily: "var(--font-orbitron)" }}
-                >
-                    ANALYTICS
+                <h1 className="font-black tracking-wider text-2xl lg:text-3xl text-[var(--color-text)] font-[var(--font-orbitron)]">
+                    Analytics
                 </h1>
-                <p
-                    className="text-base font-medium mt-1"
-                    style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-                >
+                <p className="font-medium text-sm lg:text-base text-[var(--color-muted)] font-[var(--font-rajdhani)] mt-1">
                     All-time stats and visual trends
                 </p>
             </div>
 
             {loading ? (
                 <div className="flex justify-center py-20">
-                    <div
-                        className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin"
-                        style={{ borderColor: "var(--color-primary)", borderTopColor: "transparent" }}
-                    />
+                    <div className="w-8 h-8 rounded-full border-[3px] animate-spin border-[var(--color-border)] border-t-[var(--color-primary)]" />
                 </div>
             ) : (
                 <>
@@ -78,20 +65,18 @@ export default function AnalyticsPage() {
                         <StatCard label="Grammar Points" value={totalGrammar} unit="points" icon="✏️" />
                     </div>
 
-                    {/* Weekly / Monthly toggle + charts */}
-                    <div className="space-y-4">
-                        {/* Toggle */}
+                    {/* Toggle + charts */}
+                    <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2">
                             {(["weekly", "monthly"] as const).map((t) => (
                                 <button
                                     key={t}
                                     onClick={() => setToggle(t)}
-                                    className="text-xs font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all"
+                                    className="font-black uppercase tracking-widest rounded-xl transition-all text-[0.65rem] lg:text-xs px-4 py-2 font-[var(--font-orbitron)]"
                                     style={{
                                         background: toggle === t ? "var(--color-primary)" : "transparent",
-                                        color: toggle === t ? "#000" : "var(--color-text-muted)",
+                                        color: toggle === t ? "#000" : "var(--color-muted)",
                                         border: toggle === t ? "none" : "1px solid var(--color-border)",
-                                        fontFamily: "var(--font-orbitron)",
                                     }}
                                 >
                                     {t}
@@ -99,11 +84,10 @@ export default function AnalyticsPage() {
                             ))}
                         </div>
 
-                        {toggle === "weekly" ? (
-                            <WeeklyBarChart data={weeklyData} />
-                        ) : (
-                            <MonthlyLineChart data={monthlyData} />
-                        )}
+                        {toggle === "weekly"
+                            ? <WeeklyBarChart data={weeklyData} />
+                            : <MonthlyLineChart data={monthlyData} />
+                        }
                     </div>
 
                     {/* Category donut */}

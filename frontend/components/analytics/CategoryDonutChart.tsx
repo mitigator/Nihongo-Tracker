@@ -11,14 +11,7 @@ interface CategoryDonutChartProps {
 const CustomTooltip = ({ active, payload }: any) => {
     if (!active || !payload?.length) return null;
     return (
-        <div
-            className="rounded-xl px-4 py-3 text-xs"
-            style={{
-                background: "var(--color-card)",
-                border: "1px solid var(--color-border)",
-                fontFamily: "var(--font-rajdhani)",
-            }}
-        >
+        <div className="rounded-xl text-xs font-[var(--font-rajdhani)]" style={{ background: "var(--color-card)", border: "1px solid var(--color-border)", padding: "0.625rem 0.875rem" }}>
             <p style={{ color: payload[0].payload.fill }}>
                 {payload[0].name}: <strong>{payload[0].value}</strong>
             </p>
@@ -26,11 +19,7 @@ const CustomTooltip = ({ active, payload }: any) => {
     );
 };
 
-export default function CategoryDonutChart({
-    vocab,
-    listening,
-    grammar,
-}: CategoryDonutChartProps) {
+export default function CategoryDonutChart({ vocab, listening, grammar }: CategoryDonutChartProps) {
     const total = vocab + listening + grammar;
 
     const data = [
@@ -40,50 +29,27 @@ export default function CategoryDonutChart({
     ].filter((d) => d.value > 0);
 
     return (
-        <div
-            className="rounded-2xl border px-5 py-5"
-            style={{ background: "var(--color-card)", borderColor: "var(--color-border)" }}
-        >
-            <p
-                className="text-xs font-bold uppercase tracking-widest mb-4"
-                style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-            >
+        <div className="rounded-2xl border bg-[var(--color-card)] border-[var(--color-border)]" style={{ padding: "1.5rem" }}>
+            <p className="font-bold uppercase tracking-widest text-[0.65rem] lg:text-xs text-[var(--color-muted)] font-[var(--font-orbitron)] mb-4">
                 🍩 Category Breakdown
             </p>
 
             {total === 0 ? (
                 <div className="flex items-center justify-center h-[220px]">
-                    <p
-                        className="text-sm"
-                        style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-                    >
+                    <p className="text-sm lg:text-base text-[var(--color-muted)] font-[var(--font-rajdhani)]">
                         No data yet
                     </p>
                 </div>
             ) : (
-                <ResponsiveContainer width="100%" height={220}>
+                <ResponsiveContainer width="100%" height={240}>
                     <PieChart>
-                        <Pie
-                            data={data}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={60}
-                            outerRadius={90}
-                            paddingAngle={3}
-                            dataKey="value"
-                        >
+                        <Pie data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="value">
                             {data.map((entry, index) => (
                                 <Cell key={index} fill={entry.fill} />
                             ))}
                         </Pie>
                         <Tooltip content={<CustomTooltip />} />
-                        <Legend
-                            wrapperStyle={{
-                                fontFamily: "var(--font-rajdhani)",
-                                fontSize: 12,
-                                color: "var(--color-text-muted)",
-                            }}
-                        />
+                        <Legend wrapperStyle={{ fontFamily: "var(--font-rajdhani)", fontSize: 12, color: "var(--color-muted)" }} />
                     </PieChart>
                 </ResponsiveContainer>
             )}

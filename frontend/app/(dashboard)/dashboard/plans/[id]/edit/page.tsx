@@ -23,10 +23,7 @@ export default function EditPlanPage() {
     if (fetching) {
         return (
             <div className="flex justify-center py-20">
-                <div
-                    className="w-8 h-8 rounded-full border-4 border-t-transparent animate-spin"
-                    style={{ borderColor: "var(--color-primary)", borderTopColor: "transparent" }}
-                />
+                <div className="w-8 h-8 rounded-full border-[3px] animate-spin border-[var(--color-border)] border-t-[var(--color-primary)]" />
             </div>
         );
     }
@@ -35,16 +32,12 @@ export default function EditPlanPage() {
         return (
             <div className="text-center py-20">
                 <p className="text-5xl mb-4">🔍</p>
-                <p
-                    className="text-base font-semibold mb-4"
-                    style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-rajdhani)" }}
-                >
+                <p className="font-semibold text-sm lg:text-base text-[var(--color-muted)] font-[var(--font-rajdhani)] mb-4">
                     Plan not found.
                 </p>
                 <button
                     onClick={() => router.push("/dashboard/plans")}
-                    className="text-sm font-black uppercase tracking-widest"
-                    style={{ color: "var(--color-primary)", fontFamily: "var(--font-orbitron)" }}
+                    className="font-black uppercase tracking-widest text-xs lg:text-sm font-[var(--font-orbitron)] text-[var(--color-primary)] hover:opacity-80 transition-all"
                 >
                     ← Back to Plans
                 </button>
@@ -59,36 +52,25 @@ export default function EditPlanPage() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div className="max-w-2xl mx-auto flex flex-col gap-6">
+
             <button
                 onClick={() => router.back()}
-                className="text-sm font-bold uppercase tracking-widest transition-all"
-                style={{ color: "var(--color-text-muted)", fontFamily: "var(--font-orbitron)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-primary)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-text-muted)")}
+                className="self-start font-bold uppercase tracking-widest text-xs lg:text-sm transition-all font-[var(--font-orbitron)] text-[var(--color-muted)] hover:text-[var(--color-primary)]"
             >
                 ← Back
             </button>
 
             <div>
-                <h1
-                    className="text-2xl font-black tracking-wider"
-                    style={{ color: "var(--color-text)", fontFamily: "var(--font-orbitron)" }}
-                >
-                    EDIT PLAN
+                <h1 className="font-black tracking-wider text-2xl lg:text-3xl text-[var(--color-text)] font-[var(--font-orbitron)]">
+                    Edit Plan
                 </h1>
-                <p
-                    className="text-base font-medium mt-1"
-                    style={{ color: "var(--color-primary)", fontFamily: "var(--font-rajdhani)" }}
-                >
+                <p className="font-medium text-sm lg:text-base text-[var(--color-primary)] font-[var(--font-rajdhani)] mt-1">
                     {plan.title}
                 </p>
             </div>
 
-            <div
-                className="rounded-2xl p-8 border"
-                style={{ background: "var(--color-card)", borderColor: "var(--color-border)" }}
-            >
+            <div className="rounded-2xl border bg-[var(--color-card)] border-[var(--color-border)]" style={{ padding: "2rem" }}>
                 <StudyPlanForm
                     initialData={{
                         title: plan.title,
@@ -98,7 +80,7 @@ export default function EditPlanPage() {
                         weeklyTargets: plan.weeklyTargets,
                     }}
                     onSubmit={handleSubmit}
-                    submitLabel="UPDATE PLAN"
+                    submitLabel="Update Plan"
                 />
             </div>
         </div>
