@@ -47,8 +47,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <ProgressProvider>
                     <MockTestProvider>
                         <StudyPlanProvider>
-                            <div className="min-h-screen bg-[var(--color-bg)]">
+                            <div className="min-h-screen flex flex-col bg-[var(--color-bg)] overflow-hidden">
 
+                                {/* ── Navbar ── */}
                                 <nav className="sticky top-0 z-40 border-b bg-[var(--color-card)] border-[var(--color-border)]">
                                     <div className="app-container flex items-center justify-between h-16 gap-4">
 
@@ -127,9 +128,48 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     )}
                                 </nav>
 
-                                <main className="app-container py-8 sm:py-10">
+                                {/* ── Page content ── */}
+                                <main className="app-container pt-8 sm:pt-10 sm:pb-24 flex-1 pb-[26px]">
                                     {children}
                                 </main>
+
+                                {/* ── Footer ── */}
+                                <footer className="border-t border-[var(--color-border)]" style={{ marginTop: "20px" }}>
+                                    <div className="app-container py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+
+                                        {/* Left — brand */}
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-black tracking-widest text-sm text-[var(--color-primary)] font-[var(--font-orbitron)]">
+                                                日本語
+                                            </span>
+                                            <span className="font-black tracking-widest text-sm text-[var(--color-text)] font-[var(--font-orbitron)]">
+                                                Tracker
+                                            </span>
+                                            <span className="text-[var(--color-border)] mx-1 select-none">·</span>
+                                            <span className="text-xs text-[var(--color-muted)] font-[var(--font-rajdhani)]">
+                                                JLPT study companion
+                                            </span>
+                                        </div>
+
+                                        {/* Center — nav links */}
+                                        <div className="flex items-center gap-4 flex-wrap justify-center">
+                                            {navLinks.map(({ href, label }) => (
+                                                <Link
+                                                    key={href}
+                                                    href={href}
+                                                    className="text-[0.65rem] font-bold uppercase tracking-widest font-[var(--font-orbitron)] no-underline text-[var(--color-muted)] hover:text-[var(--color-primary)] transition-colors"
+                                                >
+                                                    {label}
+                                                </Link>
+                                            ))}
+                                        </div>
+
+                                        {/* Right — tagline */}
+                                        <p className="text-xs text-[var(--color-muted)] font-[var(--font-rajdhani)] text-center sm:text-right">
+                                            頑張ってください — Keep going
+                                        </p>
+                                    </div>
+                                </footer>
 
                             </div>
                         </StudyPlanProvider>
