@@ -2,7 +2,6 @@
 
 import {
   createContext,
-  useContext,
   useEffect,
   useState,
   ReactNode,
@@ -33,7 +32,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
-  // Rehydrate user from cookie on page refresh
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -45,40 +43,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
       }
     };
-
     fetchUser();
   }, []);
 
   const register = async (credentials: RegisterCredentials) => {
     try {
-      const { data } = await axiosInstance.post<User>(
-        "/api/auth/register",
-        credentials
-      );
+      const { data } = await axiosInstance.post<User>("/api/auth/register", credentials);
       setUser(data);
       toast.success("Account created successfully");
-      router.push("/dashboard");
+      router.replace("/dashboard");
     } catch (error) {
       const err = error as AxiosError<ApiError>;
-      const message =
-        err.response?.data?.message || "Registration failed. Try again.";
+      const message = err.response?.data?.message || "Registration failed. Try again.";
       toast.error(message);
     }
   };
 
   const login = async (credentials: LoginCredentials) => {
     try {
-      const { data } = await axiosInstance.post<User>(
-        "/api/auth/login",
-        credentials
-      );
+      const { data } = await axiosInstance.post<User>("/api/auth/login", credentials);
       setUser(data);
+      router.replace("/dashboard");
       toast.success("Logged in successfully");
-      router.push("/dashboard");
     } catch (error) {
       const err = error as AxiosError<ApiError>;
-      const message =
-        err.response?.data?.message || "Login failed. Try again.";
+      const message = err.response?.data?.message || "Login failed. Try again.";
       toast.error(message);
     }
   };
@@ -88,7 +77,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await axiosInstance.post("/api/auth/logout");
       setUser(null);
       toast.success("Logged out successfully");
-      router.push("/login");
+      router.replace("/login");
     } catch {
       toast.error("Logout failed. Try again.");
     }

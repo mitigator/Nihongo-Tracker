@@ -12,26 +12,26 @@ import { StudyPlanProvider } from "@/context/StudyPlanContext";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-    const { user, loading } = useAuth();
+    const { user, loading, logout } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
+        // Only redirect AFTER auth check is complete
         if (!loading && !user) router.replace("/login");
     }, [user, loading, router]);
 
     useEffect(() => { setMenuOpen(false); }, [pathname]);
 
-    if (loading) {
+    // Show spinner while auth is being checked OR while redirecting
+    if (loading || !user) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)]">
                 <div className="w-8 h-8 rounded-full border-[3px] animate-spin border-[var(--color-border)] border-t-[var(--color-primary)]" />
             </div>
         );
     }
-
-    if (!user) return null;
 
     const navLinks = [
         { href: "/dashboard", label: "Daily", exact: true },
@@ -86,6 +86,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                                 {user.name}
                                             </span>
                                             <ThemeToggle />
+
+                                            {/* ── Logout button (desktop) ── */}
+                                            <button
+                                                onClick={logout}
+                                                className="hidden md:block font-bold uppercase tracking-wider rounded-lg transition-all text-[0.65rem] lg:text-xs px-4 py-2 font-[var(--font-orbitron)] whitespace-nowrap border border-[var(--color-border)] text-[var(--color-muted)] hover:border-red-500 hover:text-red-500"
+                                            >
+                                                Logout
+                                            </button>
+
                                             <button
                                                 onClick={() => setMenuOpen((p) => !p)}
                                                 className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-[5px] rounded-lg shrink-0"
@@ -120,8 +129,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                                         </Link>
                                                     );
                                                 })}
-                                                <div className="font-semibold text-sm text-[var(--color-muted)] font-[var(--font-rajdhani)] px-5 pt-4 mt-1 border-t border-[var(--color-border)]">
-                                                    {user.name}
+
+                                                {/* ── User + Logout (mobile) ── */}
+                                                <div className="flex items-center justify-between px-5 pt-4 mt-1 border-t border-[var(--color-border)]">
+                                                    <span className="font-semibold text-sm text-[var(--color-muted)] font-[var(--font-rajdhani)]">
+                                                        {user.name}
+                                                    </span>
+                                                    <button
+                                                        onClick={logout}
+                                                        className="font-bold uppercase tracking-wider rounded-lg text-[0.65rem] px-4 py-2 font-[var(--font-orbitron)] border border-[var(--color-border)] text-[var(--color-muted)] hover:border-red-500 hover:text-red-500 transition-all"
+                                                    >
+                                                        Logout
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -137,7 +156,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 <footer className="border-t border-[var(--color-border)]" style={{ marginTop: "20px" }}>
                                     <div className="app-container py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
 
-                                        {/* Left — brand */}
                                         <div className="flex items-center gap-2">
                                             <span className="font-black tracking-widest text-sm text-[var(--color-primary)] font-[var(--font-orbitron)]">
                                                 日本語
@@ -151,7 +169,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                             </span>
                                         </div>
 
-                                        {/* Center — nav links */}
                                         <div className="flex items-center gap-4 flex-wrap justify-center">
                                             {navLinks.map(({ href, label }) => (
                                                 <Link
@@ -164,7 +181,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                             ))}
                                         </div>
 
-                                        {/* Right — tagline */}
                                         <p className="text-xs text-[var(--color-muted)] font-[var(--font-rajdhani)] text-center sm:text-right">
                                             頑張ってください — Keep going
                                         </p>

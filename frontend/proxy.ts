@@ -7,6 +7,11 @@ export function proxy(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 
+  // Never intercept API routes — pass through directly
+  if (pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
+
   const isPublicRoute = publicRoutes.includes(pathname);
 
   if (!token && !isPublicRoute) {
@@ -14,7 +19,7 @@ export function proxy(request: NextRequest) {
   }
 
   if (token && isPublicRoute) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();

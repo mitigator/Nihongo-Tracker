@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  withCredentials: true, // send cookies with every request
+  baseURL: "", // same origin — Next.js serves /api routes directly
+  withCredentials: true, // keep cookies working
   headers: {
     "Content-Type": "application/json",
   },
