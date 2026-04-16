@@ -13,25 +13,34 @@ interface JwtPayload {
  */
 export async function getAuthUser(req: NextRequest) {
   try {
-    // 1. Try httpOnly cookie
     let token = req.cookies.get("token")?.value;
 
-    // 2. Fall back to Authorization: Bearer <token>
+    // ← ADD THESE
+    console.log("[auth] cookies:", req.cookies.getAll());
+    console.log("[auth] token from cookie:", token);
+
     if (!token) {
       const authHeader = req.headers.get("authorization");
+      console.log("[auth] auth header:", authHeader); // ← ADD
       if (authHeader?.startsWith("Bearer ")) {
         token = authHeader.split(" ")[1];
       }
     }
 
-    if (!token) return null;
+    if (!token) {
+      console.log("[auth] no token found → returning null"); // ← ADD
+      return null;
+    }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    console.log("[auth] decoded id:", decoded.id); // ← ADD
 
     await connectDB();
     const user = await User.findById(decoded.id).select("-password");
+    console.log("[auth] user found:", user?._id ?? "null"); // ← ADD
     return user ?? null;
-  } catch {
+  } catch (error) {
+    console.log("[auth] error:", error); // ← ADD
     return null;
   }
 }
@@ -84,3 +93,4 @@ export function clearAuthCookie(res: NextResponse) {
   });
   return res;
 }
+

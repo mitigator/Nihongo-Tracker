@@ -10,6 +10,7 @@ import MonthlyLineChart from "@/components/analytics/MonthlyLineChart";
 import CategoryDonutChart from "@/components/analytics/CategoryDonutChart";
 import TestScoreTrend from "@/components/analytics/TestScoreTrend";
 import StatCard from "@/components/ui/StatCard";
+import AnkiAnalyticsSection from "@/components/anki/analytics/AnkiAnalyticsSection"; // ← NEW
 
 export default function AnalyticsPage() {
     const { tests, stats: testStats, fetchTests } = useMockTests();
@@ -114,6 +115,11 @@ export default function AnalyticsPage() {
                             />
                         </div>
                     )}
+
+                    {/* ── Anki section ── */}       {/* ← NEW */}
+                    <div className="border-t border-[var(--color-border)] pt-8">
+                        <AnkiAnalyticsSection />
+                    </div>
                 </>
             )}
         </div>
