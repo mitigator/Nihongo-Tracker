@@ -39,6 +39,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         { href: "/dashboard/tests", label: "Tests", exact: false },
         { href: "/dashboard/plans", label: "Plans", exact: false },
         { href: "/dashboard/analytics", label: "Analytics", exact: false },
+        { href: "/dashboard/anki", label: "Anki", exact: false }
     ];
 
     return (
