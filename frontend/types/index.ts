@@ -2,6 +2,7 @@ export interface User {
   _id: string;
   name: string;
   email: string;
+  googleId?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -25,6 +26,18 @@ export interface RegisterCredentials {
   name: string;
   email: string;
   password: string;
+}
+
+// ── OTP ──────────────────────────────────────────────────────
+export interface OtpRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface OtpVerifyPayload {
+  email: string;
+  otp: string;
 }
 
 // ── Daily Entry ──────────────────────────────────────────────

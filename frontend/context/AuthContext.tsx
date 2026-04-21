@@ -21,7 +21,12 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
-  register: (credentials: RegisterCredentials) => Promise<void>;
+  // Step 1: send OTP — returns true on success so the form can advance to OTP screen
+  requestOtp: (credentials: RegisterCredentials) => Promise<boolean>;
+  // Step 2: verify OTP and create account
+  verifyOtpAndRegister: (email: string, otp: string) => Promise<void>;
+  // Resend OTP (calls same endpoint as requestOtp but with stored credentials)
+  resendOtp: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -46,19 +51,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     fetchUser();
   }, []);
 
-  const register = async (credentials: RegisterCredentials) => {
+  // ── Step 1: Request OTP ───────────────────────────────────
+  const requestOtp = async (credentials: RegisterCredentials): Promise<boolean> => {
     try {
-      const { data } = await axiosInstance.post<User>("/api/auth/register", credentials);
+      await axiosInstance.post("/api/auth/send-otp", credentials);
+      toast.success("Verification code sent to your email!");
+      return true;
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      const message = err.response?.data?.message || "Failed to send OTP. Try again.";
+      toast.error(message);
+      return false;
+    }
+  };
+
+  // ── Step 2: Verify OTP and create account ────────────────
+  const verifyOtpAndRegister = async (email: string, otp: string): Promise<void> => {
+    try {
+      const { data } = await axiosInstance.post<User>("/api/auth/verify-otp", {
+        email,
+        otp,
+      });
       setUser(data);
-      toast.success("Account created successfully");
+      toast.success("Account created! Welcome to Nihongo Tracker 🎉");
       router.replace("/dashboard");
     } catch (error) {
       const err = error as AxiosError<ApiError>;
-      const message = err.response?.data?.message || "Registration failed. Try again.";
+      const message = err.response?.data?.message || "Verification failed. Try again.";
       toast.error(message);
     }
   };
 
+  // ── Resend OTP ────────────────────────────────────────────
+  const resendOtp = async (credentials: RegisterCredentials): Promise<void> => {
+    try {
+      await axiosInstance.post("/api/auth/send-otp", credentials);
+      toast.success("New code sent!");
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      const message = err.response?.data?.message || "Failed to resend OTP.";
+      toast.error(message);
+    }
+  };
+
+  // ── Login ─────────────────────────────────────────────────
   const login = async (credentials: LoginCredentials) => {
     try {
       const { data } = await axiosInstance.post<User>("/api/auth/login", credentials);
@@ -72,6 +108,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // ── Logout ────────────────────────────────────────────────
   const logout = async () => {
     try {
       await axiosInstance.post("/api/auth/logout");
@@ -84,7 +121,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, login, requestOtp, verifyOtpAndRegister, resendOtp, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
