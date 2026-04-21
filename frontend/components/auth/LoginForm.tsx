@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useAuth from "@/hooks/useAuth";
 import { LoginCredentials } from "@/types";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 // ── Google Icon ───────────────────────────────────────────────────────────────
@@ -18,16 +17,9 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const LoginForm = () => {
-  const { login, loading } = useAuth();
+// ── Isolated so useSearchParams is inside a Suspense boundary ─────────────────
+const GoogleErrorToast = () => {
   const searchParams = useSearchParams();
-
-  const [formData, setFormData] = useState<LoginCredentials>({
-    email: "",
-    password: "",
-  });
-
-  // Show error toast if redirected back from Google with an error
   useEffect(() => {
     const error = searchParams.get("error");
     if (error === "google_cancelled") {
@@ -36,6 +28,17 @@ const LoginForm = () => {
       toast.error("Google sign-in failed. Please try again.");
     }
   }, [searchParams]);
+  return null;
+};
+
+// ── Main form ─────────────────────────────────────────────────────────────────
+const LoginForm = () => {
+  const { login, loading } = useAuth();
+
+  const [formData, setFormData] = useState<LoginCredentials>({
+    email: "",
+    password: "",
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -63,6 +66,11 @@ const LoginForm = () => {
       className="min-h-screen flex items-center justify-center"
       style={{ background: "var(--color-bg)", padding: "1rem" }}
     >
+      {/* Reads ?error= param and fires toast — must be inside Suspense */}
+      <Suspense fallback={null}>
+        <GoogleErrorToast />
+      </Suspense>
+
       {/* Ambient glow */}
       <div
         className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none"
