@@ -87,7 +87,7 @@ export default function DeckCard({ deck, onReview, onManage, onEdit }: DeckCardP
           <span
             className="absolute inset-0 flex items-center justify-center font-black text-[0.6rem] font-[var(--font-orbitron)] text-[var(--color-text)]"
           >
-            {deck.todayProgress.reviewedCount}/{deck.dailyReviewTarget}
+            {reviewed}/{target}
           </span>
         </div>
       </div>
