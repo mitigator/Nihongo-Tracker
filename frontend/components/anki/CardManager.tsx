@@ -2,10 +2,15 @@
 
 import { useEffect, useState } from "react";
 import useAnki from "@/hooks/useAnki";
-import { AnkiCard, AnkiCardFormData, CardType, CARD_TYPES, JLPTLevel, JLPT_LEVELS } from "@/types/anki";
+import { AnkiCard, AnkiCardFormData, CardType, CARD_TYPES } from "@/types/anki";
 
 const inputClass =
   "w-full px-4 py-3 rounded-xl text-base font-medium outline-none transition-all font-[var(--font-rajdhani)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-text)]";
+
+const focusStyle = (e: React.FocusEvent<HTMLInputElement>) =>
+  (e.target.style.borderColor = "var(--color-primary)");
+const blurStyle = (e: React.FocusEvent<HTMLInputElement>) =>
+  (e.target.style.borderColor = "var(--color-border)");
 
 export default function CardManager() {
   const {
@@ -27,13 +32,17 @@ export default function CardManager() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [filterType, setFilterType] = useState<CardType | "all">("all");
 
-  const [addForm, setAddForm] = useState<AnkiCardFormData>({
+  const emptyAdd = (): AnkiCardFormData => ({
     front: "",
     back: "",
+    onyomi: "",
+    kunyomi: "",
     type: "vocab",
     jlptLevel: activeDeck?.jlptLevel ?? null,
     deckId: activeDeck?._id,
   });
+
+  const [addForm, setAddForm] = useState<AnkiCardFormData>(emptyAdd());
   const [editForm, setEditForm] = useState<Partial<AnkiCardFormData>>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -56,20 +65,20 @@ export default function CardManager() {
     setSubmitting(true);
     const ok = await createCard({ ...addForm, deckId: activeDeck?._id });
     if (ok) {
-      setAddForm({ front: "", back: "", type: "vocab", jlptLevel: activeDeck?.jlptLevel ?? null, deckId: activeDeck?._id });
+      setAddForm(emptyAdd());
       setShowAddForm(false);
-      // Re-fetch
       if (activeDeck) fetchCards(activeDeck._id).then(setCards);
     }
     setSubmitting(false);
   };
 
   const handleEdit = async (card: AnkiCard) => {
-    if (!editForm.front && !editForm.back) return;
     setSubmitting(true);
     const ok = await updateCard(card._id, editForm);
     if (ok) {
-      setCards((prev) => prev.map((c) => c._id === card._id ? { ...c, ...editForm } as AnkiCard : c));
+      setCards((prev) =>
+        prev.map((c) => (c._id === card._id ? { ...c, ...editForm } as AnkiCard : c))
+      );
       setEditingId(null);
       setEditForm({});
     }
@@ -123,27 +132,11 @@ export default function CardManager() {
 
       {/* Add form */}
       {showAddForm && (
-        <form onSubmit={handleAdd} className="flex flex-col gap-3 rounded-2xl border p-4 bg-[var(--color-card)] border-[var(--color-border)]">
-          <input
-            type="text"
-            placeholder="Front (word / kanji)"
-            required
-            value={addForm.front}
-            onChange={(e) => setAddForm((p) => ({ ...p, front: e.target.value }))}
-            className={inputClass}
-            onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-            onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
-          />
-          <input
-            type="text"
-            placeholder="Back (meaning / reading)"
-            required
-            value={addForm.back}
-            onChange={(e) => setAddForm((p) => ({ ...p, back: e.target.value }))}
-            className={inputClass}
-            onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-            onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
-          />
+        <form
+          onSubmit={handleAdd}
+          className="flex flex-col gap-3 rounded-2xl border p-4 bg-[var(--color-card)] border-[var(--color-border)]"
+        >
+          {/* Type selector */}
           <div className="flex gap-2">
             {CARD_TYPES.map((t) => (
               <button
@@ -161,6 +154,64 @@ export default function CardManager() {
               </button>
             ))}
           </div>
+
+          {/* Front */}
+          <input
+            type="text"
+            placeholder={addForm.type === "kanji" ? "Kanji (e.g. 山)" : "Front (word / kanji)"}
+            required
+            value={addForm.front}
+            onChange={(e) => setAddForm((p) => ({ ...p, front: e.target.value }))}
+            className={inputClass}
+            onFocus={focusStyle}
+            onBlur={blurStyle}
+          />
+
+          {/* Back fields — 3 for kanji, 1 for others */}
+          {addForm.type === "kanji" ? (
+            <>
+              <input
+                type="text"
+                placeholder="Onyomi 音読み (e.g. サン)"
+                value={addForm.onyomi ?? ""}
+                onChange={(e) => setAddForm((p) => ({ ...p, onyomi: e.target.value }))}
+                className={inputClass}
+                onFocus={focusStyle}
+                onBlur={blurStyle}
+              />
+              <input
+                type="text"
+                placeholder="Kunyomi 訓読み (e.g. やま)"
+                value={addForm.kunyomi ?? ""}
+                onChange={(e) => setAddForm((p) => ({ ...p, kunyomi: e.target.value }))}
+                className={inputClass}
+                onFocus={focusStyle}
+                onBlur={blurStyle}
+              />
+              <input
+                type="text"
+                placeholder="Meaning (e.g. mountain)"
+                required
+                value={addForm.back}
+                onChange={(e) => setAddForm((p) => ({ ...p, back: e.target.value }))}
+                className={inputClass}
+                onFocus={focusStyle}
+                onBlur={blurStyle}
+              />
+            </>
+          ) : (
+            <input
+              type="text"
+              placeholder="Back (meaning / reading)"
+              required
+              value={addForm.back}
+              onChange={(e) => setAddForm((p) => ({ ...p, back: e.target.value }))}
+              className={inputClass}
+              onFocus={focusStyle}
+              onBlur={blurStyle}
+            />
+          )}
+
           <button
             type="submit"
             disabled={submitting}
@@ -209,31 +260,70 @@ export default function CardManager() {
               style={{ padding: "1rem 1.25rem" }}
             >
               {editingId === card._id ? (
+                /* ── Edit form ── */
                 <div className="flex flex-col gap-2">
                   <input
                     type="text"
                     defaultValue={card.front}
+                    placeholder="Front"
                     onChange={(e) => setEditForm((p) => ({ ...p, front: e.target.value }))}
                     className={inputClass}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
+                    onFocus={focusStyle}
+                    onBlur={blurStyle}
                   />
-                  <input
-                    type="text"
-                    defaultValue={card.back}
-                    onChange={(e) => setEditForm((p) => ({ ...p, back: e.target.value }))}
-                    className={inputClass}
-                    onFocus={(e) => (e.target.style.borderColor = "var(--color-primary)")}
-                    onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
-                  />
+
+                  {card.type === "kanji" ? (
+                    <>
+                      <input
+                        type="text"
+                        defaultValue={card.onyomi ?? ""}
+                        placeholder="Onyomi 音読み"
+                        onChange={(e) => setEditForm((p) => ({ ...p, onyomi: e.target.value }))}
+                        className={inputClass}
+                        onFocus={focusStyle}
+                        onBlur={blurStyle}
+                      />
+                      <input
+                        type="text"
+                        defaultValue={card.kunyomi ?? ""}
+                        placeholder="Kunyomi 訓読み"
+                        onChange={(e) => setEditForm((p) => ({ ...p, kunyomi: e.target.value }))}
+                        className={inputClass}
+                        onFocus={focusStyle}
+                        onBlur={blurStyle}
+                      />
+                      <input
+                        type="text"
+                        defaultValue={card.back}
+                        placeholder="Meaning"
+                        onChange={(e) => setEditForm((p) => ({ ...p, back: e.target.value }))}
+                        className={inputClass}
+                        onFocus={focusStyle}
+                        onBlur={blurStyle}
+                      />
+                    </>
+                  ) : (
+                    <input
+                      type="text"
+                      defaultValue={card.back}
+                      placeholder="Back"
+                      onChange={(e) => setEditForm((p) => ({ ...p, back: e.target.value }))}
+                      className={inputClass}
+                      onFocus={focusStyle}
+                      onBlur={blurStyle}
+                    />
+                  )}
+
                   <div className="flex gap-2">
                     <button
+                      type="button"
                       onClick={() => { setEditingId(null); setEditForm({}); }}
                       className="flex-1 py-2 rounded-xl font-black uppercase tracking-widest text-[0.6rem] font-[var(--font-orbitron)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-muted)]"
                     >
                       Cancel
                     </button>
                     <button
+                      type="button"
                       onClick={() => handleEdit(card)}
                       disabled={submitting}
                       className="flex-1 py-2 rounded-xl font-black uppercase tracking-widest text-[0.6rem] font-[var(--font-orbitron)] disabled:opacity-50"
@@ -244,16 +334,34 @@ export default function CardManager() {
                   </div>
                 </div>
               ) : (
+                /* ── Card display ── */
                 <>
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="min-w-0">
                       <p className="font-black text-sm text-[var(--color-text)] font-[var(--font-orbitron)] truncate">
                         {card.front}
                       </p>
-                      <p className="text-xs text-[var(--color-muted)] font-[var(--font-rajdhani)] mt-0.5 truncate">
-                        {card.back || <em>No back yet</em>}
-                      </p>
+
+                      {card.type === "kanji" ? (
+                        <div className="flex flex-col gap-0.5 mt-0.5">
+                          {(card.onyomi || card.kunyomi) && (
+                            <p className="text-xs text-[var(--color-muted)] font-[var(--font-rajdhani)] truncate">
+                              {card.onyomi && <span>音: {card.onyomi}</span>}
+                              {card.onyomi && card.kunyomi && <span className="mx-1">·</span>}
+                              {card.kunyomi && <span>訓: {card.kunyomi}</span>}
+                            </p>
+                          )}
+                          <p className="text-xs text-[var(--color-muted)] font-[var(--font-rajdhani)] truncate">
+                            {card.back || <em>No meaning yet</em>}
+                          </p>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-[var(--color-muted)] font-[var(--font-rajdhani)] mt-0.5 truncate">
+                          {card.back || <em>No back yet</em>}
+                        </p>
+                      )}
                     </div>
+
                     <span
                       className="text-[0.55rem] font-black uppercase tracking-widest rounded px-1.5 py-0.5 font-[var(--font-orbitron)] shrink-0"
                       style={{ background: "var(--color-border)", color: "var(--color-muted)" }}
@@ -261,9 +369,18 @@ export default function CardManager() {
                       {card.type}
                     </span>
                   </div>
+
                   <div className="flex items-center gap-2 flex-wrap">
                     <button
-                      onClick={() => { setEditingId(card._id); setEditForm({ front: card.front, back: card.back }); }}
+                      onClick={() => {
+                        setEditingId(card._id);
+                        setEditForm({
+                          front: card.front,
+                          back: card.back,
+                          onyomi: card.onyomi,
+                          kunyomi: card.kunyomi,
+                        });
+                      }}
                       className="font-bold uppercase tracking-widest rounded-lg transition-all text-[0.6rem] px-3 py-1.5 font-[var(--font-orbitron)] bg-[var(--color-bg)] border border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                     >
                       Edit
@@ -275,7 +392,6 @@ export default function CardManager() {
                     >
                       {deletingId === card._id ? "..." : "Delete"}
                     </button>
-                    {/* Move to deck */}
                     <select
                       onChange={(e) => e.target.value && handleMove(card._id, e.target.value)}
                       value=""

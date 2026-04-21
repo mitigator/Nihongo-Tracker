@@ -65,6 +65,8 @@ export interface AnkiCard {
   deck: string;
   front: string;
   back: string;
+  onyomi?: string;   // ← NEW
+  kunyomi?: string;  // ← NEW
   type: CardType;
   jlptLevel: JLPTLevel | null;
   manuallyAssigned: boolean;
@@ -80,6 +82,8 @@ export interface AnkiCard {
 export interface AnkiCardFormData {
   front: string;
   back: string;
+  onyomi?: string;   // ← NEW
+  kunyomi?: string;  // ← NEW
   type: CardType;
   jlptLevel?: JLPTLevel | null;
   deckId?: string;
